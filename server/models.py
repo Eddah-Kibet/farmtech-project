@@ -217,6 +217,18 @@ class Order(db.Model):
         if status not in valid_statuses:
             raise ValueError('Invalid order status')
         return status
+    
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "buyer_id": self.buyer_id,
+            "payment_id": self.payment_id,
+            "total_amount": self.total_amount,
+            "status": self.status,
+            "created_at": self.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+            "items": [item.to_dict() for item in self.order_items]
+        }
+
 
 class OrderItem(db.Model):
     __tablename__ = 'order_items'
@@ -240,4 +252,16 @@ class OrderItem(db.Model):
         if price <= 0:
             raise ValueError('Price must be greater than 0')
         return price
+    
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "order_id": self.order_id,
+            "product_id": self.product_id,
+            "product_name": self.product.name if self.product else None,
+            "quantity": self.quantity,
+            "price_at_purchase": self.price_at_purchase,
+            "subtotal": round(self.quantity * self.price_at_purchase, 2)
+        }
+
 
