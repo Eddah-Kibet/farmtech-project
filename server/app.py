@@ -1,10 +1,8 @@
 from flask import Flask
-from flask_migrate import Migrate
-from extensions import db, bcrypt
+from extensions import db, bcrypt, migrate, jwt
 from routes.auth import auth_bp
 from routes.order_route import order_bp
 from routes.products_route import products_bp 
-from models import User, Buyer, Farmer, Category, SubCategory, Product, ProduceDetail, Review, Payment
 
 def create_app():
     app = Flask(__name__)
@@ -13,8 +11,9 @@ def create_app():
 
     db.init_app(app)
     bcrypt.init_app(app)
+    jwt.init_app(app)
+    migrate.init_app(app, db)
 
-    Migrate(app, db)
     app.register_blueprint(auth_bp)
     app.register_blueprint(order_bp)
     app.register_blueprint(products_bp)

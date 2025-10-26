@@ -1,11 +1,11 @@
 from flask import Blueprint, request, jsonify
-from app import db
+from extensions import db
 from models import Product
 
 products_bp = Blueprint('products', __name__)
 
 # GET ALL PRODUCTS
-@products_bp.route('', methods=['GET'])
+@products_bp.route('/', methods=['GET'])
 def get_products():
     products = Product.query.all()
     
@@ -40,7 +40,7 @@ def get_product(product_id):
     })
 
 # CREATE PRODUCT
-@products_bp.route('', methods=['POST'])
+@products_bp.route('/<int:product_id>', methods=['POST'])
 def create_product():
     data = request.get_json()
     

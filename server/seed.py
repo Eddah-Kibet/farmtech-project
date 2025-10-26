@@ -1,5 +1,5 @@
 from extensions import db
-from models import User, Buyer, Farmer, Category, SubCategory, Product, ProduceDetail, Review, Payment
+from models import User, Buyer, Farmer, Category, SubCategory, Product, ProduceDetail, Review, Payment, Order, OrderItem
 from datetime import datetime, date
 import random
 from app import app
@@ -164,6 +164,44 @@ def seed_data():
             status=random.choice(["completed", "pending"]),
         )
         db.session.add(payment)
+    db.session.commit()
+
+    print("Creating orders and order items...")
+
+    orders = []
+    for buyer in buyer_profiles:
+
+        payment = Payment.query.filter_by(buyer_id=buyer.id).first()
+      
+        selected_products = random.sample(products, k=3)
+
+        total = 0
+        order = Order(
+            buyer_id=buyer.id,
+            payment_id=payment.id if payment else None,
+            status=random.choice(["completed", "pending", "shipped"]),
+            created_at=datetime.utcnow(),
+            total_amount=0 
+        )
+        db.session.add(order)
+        db.session.flush() 
+
+        for product in selected_products:
+            quantity = random.randint(1, 5)
+            price = product.price * quantity
+            total += price
+            order_item = OrderItem(
+                order_id=order.id,
+                product_id=product.id,
+                quantity=quantity,
+                price=product.price
+            )
+            db.session.add(order_item)
+
+        order.total_amount = total
+        db.session.add(order)
+        orders.append(order)
+
     db.session.commit()
 
     print("Database seeded successfully!")

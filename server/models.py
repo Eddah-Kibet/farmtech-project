@@ -1,4 +1,4 @@
-from app import db, bcrypt
+from extensions import db, bcrypt
 from sqlalchemy.orm import validates
 from extensions import db, bcrypt
 from datetime import datetime
@@ -189,3 +189,55 @@ class Payment(db.Model):
         if method not in valid_methods:
             raise ValueError('Invalid payment method')
         return method
+
+class Order(db.Model):
+    __tablename__ = 'orders'
+
+    id = db.Column(db.Integer, primary_key=True)
+    buyer_id = db.Column(db.Integer, db.ForeignKey('buyers.id'), nullable=False)
+    payment_id = db.Column(db.Integer, db.ForeignKey('payments.id'), nullable=True)
+    total_amount = db.Column(db.Float, nullable=False)
+    status = db.Column(db.String(20), default='pending')  # pending, confirmed, shipped, delivered, cancelled
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    # Relationships
+    buyer = db.relationship('Buyer', backref='orders')
+    payment = db.relationship('Payment', backref='order', uselist=False)
+    order_items = db.relationship('OrderItem', backref='order', lazy=True, cascade='all, delete-orphan')
+
+    @validates('total_amount')
+    def validate_total(self, key, total):
+        if total <= 0:
+            raise ValueError("Total amount must be greater than 0")
+        return total
+
+    @validates('status')
+    def validate_status(self, key, status):
+        valid_statuses = ['pending', 'confirmed', 'shipped', 'delivered', 'cancelled']
+        if status not in valid_statuses:
+            raise ValueError('Invalid order status')
+        return status
+
+class OrderItem(db.Model):
+    __tablename__ = 'order_items'
+
+    id = db.Column(db.Integer, primary_key=True)
+    order_id = db.Column(db.Integer, db.ForeignKey('orders.id'), nullable=False)
+    product_id = db.Column(db.Integer, db.ForeignKey('products.id'), nullable=False)
+    quantity = db.Column(db.Integer, nullable=False)
+    price_at_purchase = db.Column(db.Float, nullable=False)
+
+    product = db.relationship('Product', backref='order_items')
+
+    @validates('quantity')
+    def validate_quantity(self, key, quantity):
+        if quantity <= 0:
+            raise ValueError('Quantity must be greater than 0')
+        return quantity
+
+    @validates('price_at_purchase')
+    def validate_price(self, key, price):
+        if price <= 0:
+            raise ValueError('Price must be greater than 0')
+        return price
+
