@@ -1,8 +1,12 @@
 from extensions import db
-from models import User, Buyer, Farmer, Category, SubCategory, Product, ProduceDetail, Review, Payment
+from models import (
+    User, Buyer, Farmer, Category, SubCategory, Product, ProduceDetail,
+    Review, Payment, Order, OrderItem
+)
 from datetime import datetime, date
 import random
 from app import app
+
 
 def seed_data():
     print("Clearing old data...")
@@ -18,6 +22,7 @@ def seed_data():
         User(username="petero", email="petero@gmail.com", user_type="buyer"),
         User(username="annn", email="annn@gmail.com", user_type="buyer"),
     ]
+
     farmers = [
         User(username="farmer_james", email="jamesfarm@gmail.com", user_type="farmer"),
         User(username="greenfields", email="greenfieldsfarm@gmail.com", user_type="farmer"),
@@ -33,11 +38,11 @@ def seed_data():
 
     # --- Buyer Profiles ---
     buyer_profiles = [
-        Buyer(user_id=buyers[0].id, first_name="Alice", last_name="Wanjiku", address="Nakuru, Kenya", created_at=datetime.utcnow()),
-        Buyer(user_id=buyers[1].id, first_name="John", last_name="Mwangi", address="Eldoret, Kenya", created_at=datetime.utcnow()),
-        Buyer(user_id=buyers[2].id, first_name="Lucy", last_name="Kamau", address="Kisumu, Kenya", created_at=datetime.utcnow()),
-        Buyer(user_id=buyers[3].id, first_name="Peter", last_name="Otieno", address="Nairobi, Kenya", created_at=datetime.utcnow()),
-        Buyer(user_id=buyers[4].id, first_name="Ann", last_name="Njeri", address="Thika, Kenya", created_at=datetime.utcnow()),
+        Buyer(user_id=buyers[0].id, first_name="Alice", last_name="Wanjiku", address="Nakuru, Kenya"),
+        Buyer(user_id=buyers[1].id, first_name="John", last_name="Mwangi", address="Eldoret, Kenya"),
+        Buyer(user_id=buyers[2].id, first_name="Lucy", last_name="Kamau", address="Kisumu, Kenya"),
+        Buyer(user_id=buyers[3].id, first_name="Peter", last_name="Otieno", address="Nairobi, Kenya"),
+        Buyer(user_id=buyers[4].id, first_name="Ann", last_name="Njeri", address="Thika, Kenya"),
     ]
     db.session.add_all(buyer_profiles)
     db.session.commit()
@@ -77,8 +82,8 @@ def seed_data():
 
     print("Creating products...")
     product_data = [
-        ("Tomatoes", "Fresh red tomatoes perfect for cooking", 90, 100, "kg", True, 0),
-        ("Kales", "Fresh sukuma wiki leaves", 40, 150, "bunch", True, 1),
+        ("Tomatoes", "Fresh red tomatoes perfect for cooking", 90, 100, "kg", True, 1),
+        ("Kales", "Fresh sukuma wiki leaves", 40, 150, "bunch", True, 0),
         ("Cabbages", "Large cabbages harvested today", 70, 80, "piece", False, 2),
         ("Bananas", "Sweet ripe bananas", 120, 50, "bunch", True, 3),
         ("Avocados", "Creamy Hass avocados", 150, 60, "piece", True, 4),
@@ -119,14 +124,15 @@ def seed_data():
 
     for product in products:
         d = produce_detail_data[product.name]
-        db.session.add(ProduceDetail(
+        detail = ProduceDetail(
             product_id=product.id,
             variety=d[0],
             growing_method=d[1],
             shelf_life=d[2],
             storage_conditions=d[3],
             nutritional_info=d[4]
-        ))
+        )
+        db.session.add(detail)
     db.session.commit()
 
     print("Adding reviews...")
@@ -147,8 +153,7 @@ def seed_data():
                 product_id=product.id,
                 buyer_id=buyer.id,
                 rating=random.randint(3, 5),
-                comment=random.choice(comments),
-                created_at=datetime.utcnow()
+                comment=random.choice(comments)
             )
             db.session.add(review)
     db.session.commit()
@@ -161,12 +166,46 @@ def seed_data():
             amount=random.randint(500, 3000),
             payment_method=random.choice(methods),
             transaction_id=f"TXN{random.randint(10000, 99999)}",
-            status=random.choice(["completed", "pending"]),
+            status=random.choice(["completed", "pending"])
         )
         db.session.add(payment)
     db.session.commit()
 
+    print("Creating orders and order items...")
+    orders = []
+    for buyer in buyer_profiles:
+        payment = Payment.query.filter_by(buyer_id=buyer.id).first()
+        selected_products = random.sample(products, k=3)
+        total = 0
+
+        order = Order(
+            buyer_id=buyer.id,
+            payment_id=payment.id if payment else None,
+            status=random.choice(["pending", "confirmed", "shipped"]),
+            total_amount=1  # temporary value, will update below
+        )
+        db.session.add(order)
+        db.session.flush()  # get order.id
+
+        for product in selected_products:
+            quantity = random.randint(1, 5)
+            price = product.price * quantity
+            total += price
+            order_item = OrderItem(
+                order_id=order.id,
+                product_id=product.id,
+                quantity=quantity,
+                price_at_purchase=product.price
+            )
+            db.session.add(order_item)
+
+        order.total_amount = total if total > 0 else 1
+        db.session.add(order)
+        orders.append(order)
+
+    db.session.commit()
     print("Database seeded successfully!")
+
 
 if __name__ == "__main__":
     with app.app_context():
