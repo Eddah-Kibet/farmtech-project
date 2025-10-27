@@ -165,6 +165,17 @@ class Review(db.Model):
         if not 1 <= rating <= 5:
             raise ValueError('Rating must be between 1 and 5')
         return rating
+    
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "product_id": self.product_id,
+            "buyer_id": self.buyer_id,
+            "buyer_name": f"{self.buyer.first_name} {self.buyer.last_name}" if self.buyer else None,
+            "rating": self.rating,
+            "comment": self.comment,
+            "created_at": self.created_at.strftime("%Y-%m-%d %H:%M:%S")
+        }
 
 class Payment(db.Model):
     __tablename__ = 'payments'
