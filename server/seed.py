@@ -81,19 +81,60 @@ def seed_data():
     db.session.commit()
 
     print("Creating products...")
+
     product_data = [
-        ("Tomatoes", "Fresh red tomatoes perfect for cooking", 90, 100, "kg", True, 1),
-        ("Kales", "Fresh sukuma wiki leaves", 40, 150, "bunch", True, 0),
-        ("Cabbages", "Large cabbages harvested today", 70, 80, "piece", False, 2),
-        ("Bananas", "Sweet ripe bananas", 120, 50, "bunch", True, 3),
-        ("Avocados", "Creamy Hass avocados", 150, 60, "piece", True, 4),
-        ("Lemons", "Juicy lemons for juice and cooking", 80, 100, "kg", False, 5),
-        ("Maize", "Dry maize for flour or boiling", 100, 200, "kg", False, 6),
-        ("Beans", "Red kidney beans rich in protein", 160, 150, "kg", False, 7),
+        (
+            "Tomatoes", 
+            "Fresh red tomatoes perfect for cooking", 
+            90, 100, "kg", True, 1,
+            "https://images.unsplash.com/photo-1546470427-227e1b62cf21?w=500&q=80"
+        ),
+        (
+            "Kales", 
+            "Fresh sukuma wiki leaves", 
+            40, 150, "bunch", True, 0,
+            "https://images.unsplash.com/photo-1622205313162-be1d5712a43f?w=500&q=80"
+        ),
+        (
+            "Cabbages", 
+            "Large cabbages harvested today", 
+            70, 80, "piece", False, 2,
+            "https://images.unsplash.com/photo-1594282486552-05b4d80fbb9f?w=500&q=80"
+        ),
+        (
+            "Bananas", 
+            "Sweet ripe bananas", 
+            120, 50, "bunch", True, 3,
+            "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=500&q=80"
+        ),
+        (
+            "Avocados", 
+            "Creamy Hass avocados", 
+            150, 60, "piece", True, 4,
+            "https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?w=500&q=80"
+        ),
+        (
+            "Lemons", 
+            "Juicy lemons for juice and cooking", 
+            80, 100, "kg", False, 5,
+            "https://images.unsplash.com/photo-1587486937409-a97d3e3c1e8e?w=500&q=80"
+        ),
+        (
+            "Maize", 
+            "Dry maize for flour or boiling", 
+            100, 200, "kg", False, 6,
+            "https://images.unsplash.com/photo-1603569283847-aa295f0d016a?w=500&q=80"
+        ),
+        (
+            "Beans", 
+            "Red kidney beans rich in protein", 
+            160, 150, "kg", False, 7,
+            "https://images.unsplash.com/photo-1584949602334-204ce7d69f71?w=500&q=80"
+        ),
     ]
 
     products = []
-    for i, (name, desc, price, qty, unit, organic, sub_id) in enumerate(product_data):
+    for i, (name, desc, price, qty, unit, organic, sub_id, image_url) in enumerate(product_data):
         farmer = random.choice(farmer_profiles)
         product = Product(
             name=name,
@@ -104,7 +145,8 @@ def seed_data():
             farmer_id=farmer.id,
             subcategory_id=subcategories[sub_id].id,
             is_organic=organic,
-            harvest_date=date.today()
+            harvest_date=date.today(),
+            image_url=image_url  
         )
         db.session.add(product)
         products.append(product)
@@ -182,7 +224,7 @@ def seed_data():
             buyer_id=buyer.id,
             payment_id=payment.id if payment else None,
             status=random.choice(["pending", "confirmed", "shipped"]),
-            total_amount=1  # temporary value, will update below
+            total_amount=total if total > 0 else 1
         )
         db.session.add(order)
         db.session.flush()  # get order.id
