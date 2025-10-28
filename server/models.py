@@ -113,7 +113,8 @@ class Product(db.Model):
     description = db.Column(db.Text)
     price = db.Column(db.Float, nullable=False)
     quantity_available = db.Column(db.Integer, nullable=False)
-    unit = db.Column(db.String(20), nullable=False)  # kg, lb, piece, etc.
+    unit = db.Column(db.String(20), nullable=False)  
+    image_url = db.Column(db.String(200))
     farmer_id = db.Column(db.Integer, db.ForeignKey('farmers.id'), nullable=False)
     subcategory_id = db.Column(db.Integer, db.ForeignKey('subcategories.id'))
     is_organic = db.Column(db.Boolean, default=False)
