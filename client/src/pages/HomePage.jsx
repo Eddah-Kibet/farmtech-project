@@ -1,16 +1,16 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 // import { useAuth } from '../context/AuthContext';
 import './HomePage.css';
 
-const  HomePage = () => {
+const HomePage = () => {
 //   const { user } = useAuth();
 //   const navigate = useNavigate();
 
 //   // Redirect logged-in users to marketplace
-//   React.useEffect(() => {
+//   useEffect(() => {
 //     if (user) {
-//       navigate('/marketplace');
+//       navigate('/marketplace', { replace: true });
 //     }
 //   }, [user, navigate]);
 

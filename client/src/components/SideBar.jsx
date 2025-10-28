@@ -1,21 +1,21 @@
+// src/components/SideBar.jsx
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
-import { 
-  Home, 
-  ShoppingCart, 
-  User, 
-  LogOut, 
-  Sun, 
+import {
+  Home,
+  ShoppingCart,
+  User,
+  LogOut,
+  Sun,
   Moon,
-  BarChart3,
-  Package,
   PlusCircle,
+  Package,
   History
 } from 'lucide-react';
-import './Sidebar.css';
+import './SideBar.css';
 
-const Sidebar = ({ isOpen, onClose }) => {
+const SideBar = ({ isOpen, onClose }) => {
   const { currentUser, logout } = useAuth();
   const { isDarkMode, toggleTheme } = useTheme();
   const location = useLocation();
@@ -34,31 +34,44 @@ const Sidebar = ({ isOpen, onClose }) => {
         <div className="sidebar-user-section">
           {currentUser?.profilePicture ? (
             <img
-              src={currentUser.profilePicture.startsWith('http') ? currentUser.profilePicture : `http://localhost:5000${currentUser.profilePicture}`}
+              src={
+                currentUser.profilePicture.startsWith('http')
+                  ? currentUser.profilePicture
+                  : `http://localhost:5000${currentUser.profilePicture}`
+              }
               alt="Profile"
               className="sidebar-profile-pic"
-              style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '50%' }}
+              style={{
+                width: '50px',
+                height: '50px',
+                objectFit: 'cover',
+                borderRadius: '50%'
+              }}
               onError={(e) => {
                 e.target.style.display = 'none';
                 e.target.nextSibling.style.display = 'flex';
               }}
             />
           ) : null}
+
           {!currentUser?.profilePicture && (
             <div className="sidebar-profile-placeholder">
               <span>{currentUser?.name?.charAt(0).toUpperCase()}</span>
             </div>
           )}
+
           <div className="sidebar-user-info">
-            <span className="sidebar-user-name">Hello, {currentUser?.name}</span>
+            <span className="sidebar-user-name">
+              Hello, {currentUser?.name}
+            </span>
             <span className="sidebar-user-role">{currentUser?.role}</span>
           </div>
         </div>
 
         {/* Navigation Links */}
         <nav className="sidebar-nav">
-          <Link 
-            to="/marketplace" 
+          <Link
+            to="/marketplace"
             className={`sidebar-link ${location.pathname === '/marketplace' ? 'active' : ''}`}
             onClick={onClose}
           >
@@ -66,29 +79,19 @@ const Sidebar = ({ isOpen, onClose }) => {
             <span>Marketplace</span>
           </Link>
 
-          <Link 
-            to="/dashboard" 
-            className={`sidebar-link ${location.pathname === '/dashboard' ? 'active' : ''}`}
-            onClick={onClose}
-          >
-            <BarChart3 size={20} />
-            <span>Dashboard</span>
-          </Link>
-
           {/* Farmer-specific links */}
           {currentUser?.role === 'farmer' && (
             <>
-              <Link 
-                to="/add-product" 
+              <Link
+                to="/add-product"
                 className={`sidebar-link ${location.pathname === '/add-product' ? 'active' : ''}`}
                 onClick={onClose}
               >
                 <PlusCircle size={20} />
                 <span>Add Product</span>
               </Link>
-
-              <Link 
-                to="/my-products" 
+              <Link
+                to="/my-products"
                 className={`sidebar-link ${location.pathname === '/my-products' ? 'active' : ''}`}
                 onClick={onClose}
               >
@@ -101,17 +104,16 @@ const Sidebar = ({ isOpen, onClose }) => {
           {/* Buyer-specific links */}
           {currentUser?.role === 'buyer' && (
             <>
-              <Link 
-                to="/orders" 
+              <Link
+                to="/orders"
                 className={`sidebar-link ${location.pathname === '/orders' ? 'active' : ''}`}
                 onClick={onClose}
               >
                 <ShoppingCart size={20} />
                 <span>My Orders</span>
               </Link>
-
-              <Link 
-                to="/order-history" 
+              <Link
+                to="/order-history"
                 className={`sidebar-link ${location.pathname === '/order-history' ? 'active' : ''}`}
                 onClick={onClose}
               >
@@ -121,8 +123,8 @@ const Sidebar = ({ isOpen, onClose }) => {
             </>
           )}
 
-          <Link 
-            to="/profile" 
+          <Link
+            to="/profile"
             className={`sidebar-link ${location.pathname === '/profile' ? 'active' : ''}`}
             onClick={onClose}
           >
@@ -131,17 +133,13 @@ const Sidebar = ({ isOpen, onClose }) => {
           </Link>
         </nav>
 
-        {/* Bottom Actions - FIX 3 & 4: Added logout and theme toggle */}
+        {/* Bottom Actions */}
         <div className="sidebar-actions">
-          <button 
-            className="sidebar-action-btn"
-            onClick={toggleTheme}
-          >
+          <button className="sidebar-action-btn" onClick={toggleTheme}>
             {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
             <span>{isDarkMode ? 'Light Mode' : 'Dark Mode'}</span>
           </button>
-
-          <button 
+          <button
             className="sidebar-action-btn logout-btn"
             onClick={handleLogout}
           >
@@ -154,4 +152,4 @@ const Sidebar = ({ isOpen, onClose }) => {
   );
 };
 
-export default Sidebar;
+export default SideBar;
