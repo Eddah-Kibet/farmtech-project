@@ -81,8 +81,7 @@ def seed_data():
     db.session.commit()
 
     print("Creating products...")
-    # Updated product_data with image URLs
-    # Format: (name, description, price, qty, unit, organic, sub_id, image_url)
+
     product_data = [
         (
             "Tomatoes", 
@@ -147,7 +146,7 @@ def seed_data():
             subcategory_id=subcategories[sub_id].id,
             is_organic=organic,
             harvest_date=date.today(),
-            image_url=image_url  # Added image URL
+            image_url=image_url  
         )
         db.session.add(product)
         products.append(product)
@@ -225,7 +224,7 @@ def seed_data():
             buyer_id=buyer.id,
             payment_id=payment.id if payment else None,
             status=random.choice(["pending", "confirmed", "shipped"]),
-            total_amount=1  # temporary value, will update below
+            total_amount=total if total > 0 else 1
         )
         db.session.add(order)
         db.session.flush()  # get order.id
