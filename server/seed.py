@@ -87,49 +87,49 @@ def seed_data():
             "Tomatoes", 
             "Fresh red tomatoes perfect for cooking", 
             90, 100, "kg", True, 1,
-            "https://images.unsplash.com/photo-1546470427-227e1b62cf21?w=500&q=80"
+            "https://images.unsplash.com/photo-1594057687713-5fd14eed1c17?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=2268"
         ),
         (
             "Kales", 
             "Fresh sukuma wiki leaves", 
             40, 150, "bunch", True, 0,
-            "https://images.unsplash.com/photo-1622205313162-be1d5712a43f?w=500&q=80"
+            "https://images.unsplash.com/photo-1668717066198-53148ca2b11b?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=2340"
         ),
         (
             "Cabbages", 
             "Large cabbages harvested today", 
             70, 80, "piece", False, 2,
-            "https://images.unsplash.com/photo-1594282486552-05b4d80fbb9f?w=500&q=80"
+            "https://images.unsplash.com/photo-1730815046052-75a1b90117e2?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=2478"
         ),
         (
             "Bananas", 
             "Sweet ripe bananas", 
             120, 50, "bunch", True, 3,
-            "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=500&q=80"
+            "https://images.unsplash.com/photo-1668762924635-a3683caf32bf?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=2340"
         ),
         (
             "Avocados", 
             "Creamy Hass avocados", 
             150, 60, "piece", True, 4,
-            "https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?w=500&q=80"
+            "https://images.unsplash.com/photo-1630898042976-ede9b22a81b7?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1434"
         ),
         (
             "Lemons", 
             "Juicy lemons for juice and cooking", 
             80, 100, "kg", False, 5,
-            "https://images.unsplash.com/photo-1587486937409-a97d3e3c1e8e?w=500&q=80"
+            "https://plus.unsplash.com/premium_photo-1675731118156-51ade18e82b4?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=927"
         ),
         (
             "Maize", 
             "Dry maize for flour or boiling", 
             100, 200, "kg", False, 6,
-            "https://images.unsplash.com/photo-1603569283847-aa295f0d016a?w=500&q=80"
+            "https://images.unsplash.com/photo-1626064014555-ec26db9c559b?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=991https://images.unsplash.com/photo-1626064014555-ec26db9c559b?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=991"
         ),
         (
             "Beans", 
             "Red kidney beans rich in protein", 
             160, 150, "kg", False, 7,
-            "https://images.unsplash.com/photo-1584949602334-204ce7d69f71?w=500&q=80"
+            "https://plus.unsplash.com/premium_photo-1671130295242-582789bd9861?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=987"
         ),
     ]
 

@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from extensions import db
 from models import Product
 
-products_bp = Blueprint('products', __name__)
+products_bp = Blueprint('products', __name__, url_prefix='/products')
 
 # GET ALL PRODUCTS
 @products_bp.route('/', methods=['GET'])
@@ -16,7 +16,8 @@ def get_products():
             'name': product.name,
             'price': product.price,
             'quantity': product.quantity_available,
-            'farm_name': product.farmer.farm_name
+            'farm_name': product.farmer.farm_name,
+            'image_url': product.image_url
         })
     
     return jsonify({'products': product_list})
@@ -36,7 +37,8 @@ def get_product(product_id):
         'quantity': product.quantity_available,
         'description': product.description,
         'farm_name': product.farmer.farm_name,
-        'farmer_contact': product.farmer.contact_person
+        'farmer_contact': product.farmer.contact_person,
+        'image_url': product.image_url
     })
 
 # CREATE PRODUCT
@@ -49,7 +51,8 @@ def create_product():
         price=data['price'],
         quantity_available=data['quantity'],
         description=data.get('description', ''),
-        farmer_id=data['farmer_id']
+        farmer_id=data['farmer_id'],
+        image_url=data['image_url']
     )
     
     db.session.add(new_product)
