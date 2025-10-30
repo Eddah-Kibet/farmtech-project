@@ -92,3 +92,23 @@ useEffect(() => {
     }
   }
 }, []);
+useEffect(() => {
+  try {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+      setIsDarkMode(true);
+      document.body.classList.add('dark-mode');
+    } else if (savedTheme === 'light') {
+      setIsDarkMode(false);
+      document.body.classList.remove('dark-mode');
+    } else {
+      const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (systemPrefersDark) {
+        setIsDarkMode(true);
+        document.body.classList.add('dark-mode');
+      }
+    }
+  } catch (error) {
+    console.error('Error accessing theme from localStorage:', error);
+  }
+}, []);
