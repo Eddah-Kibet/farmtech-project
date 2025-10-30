@@ -74,3 +74,18 @@ const register = async (userData) => {
     };
   }
 }; 
+const login = async (credentials) => {
+  try {
+    const response = await axios.post('/login', credentials);
+    const { token, user } = response.data;
+    localStorage.setItem('token', token);
+    localStorage.setItem('user', JSON.stringify(user));
+    setCurrentUser(user);
+    return { success: true };
+  } catch (error) {
+    return {
+      success: false,
+      error: error.response?.data?.message || 'Login failed'
+    };
+  }
+};
