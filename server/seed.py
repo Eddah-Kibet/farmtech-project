@@ -6,20 +6,20 @@ from datetime import datetime
 def seed_database():
     with app.app_context():
         # Clear existing data
-        print("🗑️  Clearing existing data...")
+        print("Clearing existing data...")
         db.drop_all()
         db.create_all()
 
         # Create users
-        print("👥 Creating users...")
+        print("Creating users...")
         users = [
             User(
-                name="John Farmer",
-                email="farmer@example.com",
+                name="Jesse Matara",
+                email="jesse@example.com",
                 password=generate_password_hash("password123"),
                 role="farmer",
                 phone_number="+254712345678",
-                profile_picture="https://via.placeholder.com/150/4CAF50/FFFFFF?text=JF"
+                profile_picture="https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&dpr=1"
             ),
             User(
                 name="Sarah Buyer",
@@ -27,7 +27,7 @@ def seed_database():
                 password=generate_password_hash("password123"),
                 role="buyer",
                 phone_number="+254798765432",
-                profile_picture="https://via.placeholder.com/150/2196F3/FFFFFF?text=SB"
+                profile_picture="https://images.pexels.com/photos/3763188/pexels-photo-3763188.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&dpr=1"
             ),
             User(
                 name="Green Valley Farm",
@@ -35,7 +35,7 @@ def seed_database():
                 password=generate_password_hash("password123"),
                 role="farmer",
                 phone_number="+254723456789",
-                profile_picture="https://via.placeholder.com/150/4CAF50/FFFFFF?text=GV"
+                profile_picture="https://images.pexels.com/photos/264636/pexels-photo-264636.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&dpr=1"
             ),
             User(
                 name="Organic Harvest Co.",
@@ -43,7 +43,7 @@ def seed_database():
                 password=generate_password_hash("password123"),
                 role="farmer",
                 phone_number="+254734567890",
-                profile_picture="https://via.placeholder.com/150/8BC34A/FFFFFF?text=OH"
+                profile_picture="https://images.pexels.com/photos/2097090/pexels-photo-2097090.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&dpr=1"
             )
         ]
         
@@ -52,7 +52,7 @@ def seed_database():
         db.session.commit()
 
         # Create products
-        print("🛍️ Creating products...")
+        print("Creating products...")
         products = [
             Product(
                 name="Organic Tomatoes",
@@ -60,7 +60,7 @@ def seed_database():
                 category="Vegetables",
                 stock=50,
                 description="Fresh, vine-ripened organic tomatoes grown without pesticides",
-                image="https://via.placeholder.com/300/FF6B6B/FFFFFF?text=Tomatoes",
+                image="https://images.pexels.com/photos/1327838/pexels-photo-1327838.jpeg?auto=compress&cs=tinysrgb&w=600",
                 farmer_id=1
             ),
             Product(
@@ -69,7 +69,7 @@ def seed_database():
                 category="Dairy",
                 stock=24,
                 description="Farm-fresh eggs from free-range chickens raised naturally",
-                image="https://via.placeholder.com/300/FECA57/000000?text=Eggs",
+                image="https://images.pexels.com/photos/1622913/pexels-photo-1622913.jpeg?auto=compress&cs=tinysrgb&w=600",
                 farmer_id=1
             ),
             Product(
@@ -78,7 +78,7 @@ def seed_database():
                 category="Other",
                 stock=15,
                 description="Raw, unfiltered honey from local bee colonies",
-                image="https://via.placeholder.com/300/FFEAA7/000000?text=Honey",
+                image="https://images.pexels.com/photos/1021048/pexels-photo-1021048.jpeg?auto=compress&cs=tinysrgb&w=600",
                 farmer_id=3
             ),
             Product(
@@ -87,7 +87,7 @@ def seed_database():
                 category="Fruits", 
                 stock=100,
                 description="Crisp, juicy apples picked fresh from our orchard",
-                image="https://via.placeholder.com/300/FF7675/FFFFFF?text=Apples",
+                image="https://images.pexels.com/photos/102104/pexels-photo-102104.jpeg?auto=compress&cs=tinysrgb&w=600",
                 farmer_id=3
             ),
             Product(
@@ -96,7 +96,7 @@ def seed_database():
                 category="Vegetables",
                 stock=75,
                 description="Sweet, crunchy carrots grown in rich organic soil",
-                image="https://via.placeholder.com/300/E17055/FFFFFF?text=Carrots", 
+                image="https://images.pexels.com/photos/365050/pexels-photo-365050.jpeg?auto=compress&cs=tinysrgb&w=600",
                 farmer_id=4
             ),
             Product(
@@ -105,7 +105,7 @@ def seed_database():
                 category="Fruits",
                 stock=30,
                 description="Sweet, seasonal strawberries perfect for desserts",
-                image="https://via.placeholder.com/300/FD79A8/FFFFFF?text=Strawberries",
+                image="https://images.pexels.com/photos/46174/strawberries-fruits-strawberry-red-46174.jpeg?auto=compress&cs=tinysrgb&w=600",
                 farmer_id=4
             ),
             Product(
@@ -114,7 +114,7 @@ def seed_database():
                 category="Vegetables",
                 stock=60,
                 description="Hearty potatoes grown using sustainable farming methods",
-                image="https://via.placeholder.com/300/795548/FFFFFF?text=Potatoes",
+                image="https://images.pexels.com/photos/144248/potatoes-vegetables-erdfrucht-bio-144248.jpeg?auto=compress&cs=tinysrgb&w=600",
                 farmer_id=1
             ),
             Product(
@@ -123,7 +123,7 @@ def seed_database():
                 category="Dairy", 
                 stock=20,
                 description="Fresh milk from grass-fed cows, pasteurized daily",
-                image="https://via.placeholder.com/300/FFFFFF/000000?text=Milk",
+                image="https://images.pexels.com/photos/248412/pexels-photo-248412.jpeg?auto=compress&cs=tinysrgb&w=600",
                 farmer_id=3
             )
         ]
@@ -133,7 +133,7 @@ def seed_database():
         db.session.commit()
 
         # Create some orders
-        print("📦 Creating orders...")
+        print("Creating orders...")
         orders = [
             Order(buyer_id=2, total_amount=600.00, status="delivered"),
             Order(buyer_id=2, total_amount=450.00, status="confirmed"),
@@ -161,27 +161,27 @@ def seed_database():
             db.session.execute(stmt)
 
         # Create ratings
-        print("⭐ Creating ratings...")
+        print("Creating ratings...")
         ratings = [
             Rating(
                 buyer_id=2,
                 farmer_id=1,
                 product_id=1,
-                score=9,  # 4.5/5 stars
+                score=9,
                 comment="Excellent tomatoes! Very fresh and flavorful."
             ),
             Rating(
                 buyer_id=2, 
                 farmer_id=1,
                 product_id=2,
-                score=8,  # 4/5 stars
+                score=8,
                 comment="Good quality eggs, will order again."
             ),
             Rating(
                 buyer_id=2,
                 farmer_id=3, 
                 product_id=3,
-                score=10,  # 5/5 stars
+                score=10,
                 comment="Amazing honey! So pure and delicious."
             )
         ]
@@ -190,14 +190,14 @@ def seed_database():
             db.session.add(rating)
 
         db.session.commit()
-        print("✅ Database seeded successfully!")
-        print("\n📋 Sample Data Created:")
-        print(f"   👥 Users: {len(users)} (2 farmers, 1 buyer)")
-        print(f"   🛍️  Products: {len(products)}")
-        print(f"   📦 Orders: {len(orders)}")
-        print(f"   ⭐ Ratings: {len(ratings)}")
-        print(f"\n🔑 Test Credentials:")
-        print(f"   Farmer: farmer@example.com / password123")
+        print("Database seeded successfully!")
+        print("\nSample Data Created:")
+        print(f"   Users: {len(users)} (3 farmers, 1 buyer)")
+        print(f"   Products: {len(products)}")
+        print(f"   Orders: {len(orders)}")
+        print(f"   Ratings: {len(ratings)}")
+        print(f"\nTest Credentials:")
+        print(f"   Farmer: jesse@example.com / password123")
         print(f"   Buyer:  buyer@example.com / password123")
 
 if __name__ == '__main__':
