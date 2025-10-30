@@ -95,3 +95,19 @@ button, .btn, input[type="submit"] {
     margin: 0.5rem 0;
   }
 }
+/* Normal professional font scaling */
+html {
+  font-size: 14px;
+}
+
+@media (max-width: 768px) {
+  html {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  html {
+    font-size: 13px;
+  }
+}
