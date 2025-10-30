@@ -112,3 +112,19 @@ useEffect(() => {
     console.error('Error accessing theme from localStorage:', error);
   }
 }, []);
+const toggleTheme = () => {
+  const newTheme = !isDarkMode;
+  setIsDarkMode(newTheme);
+  
+  try {
+    localStorage.setItem('theme', newTheme ? 'dark' : 'light');
+  } catch (error) {
+    console.error('Error saving theme to localStorage:', error);
+  }
+
+  if (newTheme) {
+    document.body.classList.add('dark-mode');
+  } else {
+    document.body.classList.remove('dark-mode');
+  }
+};
