@@ -203,16 +203,16 @@ def create_order():
             total_amount += product.price * item.get('quantity', 1)
             products_to_order.append((product, item.get('quantity', 1)))
 
-        # Create order with 'confirmed' status since payment is successful
+        
         order = Order(
             buyer_id=user_id,
             total_amount=total_amount,
             status='confirmed'
         )
         db.session.add(order)
-        db.session.flush()  # Get order ID
+        db.session.flush()  
 
-        # Add products to order and update stock
+        
         for product, quantity in products_to_order:
             insert_stmt = order_product.insert().values(
                 order_id=order.id,
@@ -238,7 +238,7 @@ def get_orders():
         
         if user.role == 'buyer':
             orders = Order.query.filter_by(buyer_id=user_id).all()
-        else:  # farmer
+        else:  
             orders = Order.query.join(order_product).join(Product).filter(
                 Product.farmer_id == user_id
             ).distinct().all()
