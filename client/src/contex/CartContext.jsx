@@ -113,3 +113,13 @@ return (
     {children}
   </CartContext.Provider>
 );
+const clearCart = () => {
+  setCart([]);
+  localStorage.removeItem('cart');
+};
+
+return (
+  <CartContext.Provider value={{ cart, addToCart, removeFromCart, updateQuantity, clearCart }}>
+    {children}
+  </CartContext.Provider>
+);
