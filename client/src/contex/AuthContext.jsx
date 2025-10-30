@@ -98,7 +98,7 @@ const updateUser = (updatedUser) => {
   setCurrentUser(updatedUser);
   localStorage.setItem('user', JSON.stringify(updatedUser));
 };
-import axios from 'axios'; // FIX: Added missing import
+import axios from 'axios'; 
 
 // Add to AuthProvider component:
 useEffect(() => {
@@ -110,4 +110,21 @@ useEffect(() => {
   if (token) {
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
   }
+}, []);
+// Add this inside the existing useEffect for loading user
+useEffect(() => {
+  const token = localStorage.getItem('token');
+  const savedUser = localStorage.getItem('user');
+  if (savedUser) {
+    const user = JSON.parse(savedUser);
+    // Standardize profile picture field
+    if (user.profile_picture && !user.profilePicture) {
+      user.profilePicture = user.profile_picture;
+    }
+    setCurrentUser(user);
+  }
+  if (token) {
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  }
+  setLoading(false);
 }, []);
