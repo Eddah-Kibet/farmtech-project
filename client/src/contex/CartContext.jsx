@@ -19,3 +19,20 @@ export const CartProvider = ({ children }) => {
     </CartContext.Provider>
   );
 };
+export const CartProvider = ({ children }) => {
+  const [cart, setCart] = useState(() => {
+    try {
+      const saved = localStorage.getItem('cart');
+      return saved ? JSON.parse(saved) : [];
+    } catch (error) {
+      console.error('Error loading cart from localStorage:', error);
+      return [];
+    }
+  });
+
+  return (
+    <CartContext.Provider value={{ cart }}>
+      {children}
+    </CartContext.Provider>
+  );
+};
