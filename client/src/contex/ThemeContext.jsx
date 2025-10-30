@@ -75,3 +75,20 @@ return (
     {children}
   </ThemeContext.Provider>
 );
+useEffect(() => {
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme === 'dark') {
+    setIsDarkMode(true);
+    document.body.classList.add('dark-mode');
+  } else if (savedTheme === 'light') {
+    setIsDarkMode(false);
+    document.body.classList.remove('dark-mode');
+  } else {
+    // Check system preference if no saved theme
+    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if (systemPrefersDark) {
+      setIsDarkMode(true);
+      document.body.classList.add('dark-mode');
+    }
+  }
+}, []);
