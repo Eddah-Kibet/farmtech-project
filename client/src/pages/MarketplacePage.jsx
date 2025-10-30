@@ -37,7 +37,7 @@ const MarketplacePage = () => {
     fetchProducts();
   }, []);
 
-  // Handle URL parameters for review functionality
+  
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const productId = urlParams.get('product');
@@ -48,7 +48,7 @@ const MarketplacePage = () => {
       if (product) {
         setSelectedProduct(product);
         setShowReviewForm(true);
-        // Scroll to top to show review form
+        
         window.scrollTo(0, 0);
       }
     }
@@ -57,12 +57,12 @@ const MarketplacePage = () => {
   useEffect(() => {
     let filtered = products;
 
-    // Filter by category
+    
     if (selectedCategory !== 'All') {
       filtered = filtered.filter(product => product.category === selectedCategory);
     }
 
-    // Filter by search term
+    
     if (searchTerm) {
       filtered = filtered.filter(product =>
         product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -80,7 +80,7 @@ const MarketplacePage = () => {
   const handleReviewSubmitted = () => {
     setShowReviewForm(false);
     setSelectedProduct(null);
-    // Clear URL parameters
+    
     navigate('/marketplace', { replace: true });
   };
 
@@ -90,7 +90,7 @@ const MarketplacePage = () => {
         <h1>Marketplace</h1>
         <p>Browse and shop for fresh farm produce</p>
 
-        {/* Review Form Modal */}
+        {}
         {showReviewForm && selectedProduct && (
           <div className="review-modal">
             <div className="review-modal-content">
@@ -126,7 +126,7 @@ const MarketplacePage = () => {
           </div>
         )}
 
-        {/* Search and Filter Controls */}
+        {}
         <div className="marketplace-controls">
           <div className="search-bar">
             <input
@@ -154,7 +154,7 @@ const MarketplacePage = () => {
           </div>
         </div>
 
-        {/* Products Grid */}
+        {}
         <div className="products-grid">
           {filteredProducts.length === 0 ? (
             <div className="no-products">

@@ -40,7 +40,7 @@ const DashboardPage = () => {
 
       if (response.status === 201) {
         alert('Product added successfully!');
-        // Reset form
+        
         setNewProduct({
           name: '',
           description: '',
@@ -144,7 +144,7 @@ const DashboardPage = () => {
                   required
                 />
                 
-                {/* Image Upload Section - FIXED */}
+                {}
                 <div className="image-upload-section">
                   <label>Product Image:</label>
                   <input
