@@ -51,4 +51,73 @@ const ChatPage = () => {
       setError('You cannot chat with yourself');
       setLoading(false);
       return;
-    }}
+    }
+
+    fetchUserDetails();
+  }, [userId, currentUser, navigate, fetchUserDetails]);
+
+
+
+  const handleClose = () => {
+    navigate(-1); 
+  };
+
+  if (loading) {
+    return (
+      <div className="chat-page">
+        <div className="chat-container">
+          <div className="loading">
+            <div className="loading-spinner"></div>
+            <p>Loading chat...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="chat-page">
+        <div className="chat-container">
+          <div className="error-message">
+            <h2>Error</h2>
+            <p>{error}</p>
+            <button onClick={() => navigate(-1)} className="back-btn">
+              Go Back
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!otherUser) {
+    return (
+      <div className="chat-page">
+        <div className="chat-container">
+          <div className="error-message">
+            <h2>User Not Found</h2>
+            <p>The user you're trying to chat with doesn't exist.</p>
+            <button onClick={() => navigate(-1)} className="back-btn">
+              Go Back
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="chat-page">
+      <div className="chat-container">
+        <ChatBox
+          otherUserId={otherUser.id}
+          otherUserName={otherUser.name}
+          onClose={handleClose}
+        />
+      </div>
+    </div>
+  );
+};
+
+export default ChatPage;
