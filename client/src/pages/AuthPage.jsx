@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useAuth } from './AuthContext'; // Adjust import path as needed
+import { useAuth } from './AuthContext'; 
 import './AuthPage.css';
 
 const AuthPage = () => {

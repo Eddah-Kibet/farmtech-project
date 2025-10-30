@@ -7,7 +7,6 @@ const LandingPage = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  // Redirect logged-in users to marketplace
   React.useEffect(() => {
     if (user) {
       navigate('/marketplace');
@@ -15,7 +14,7 @@ const LandingPage = () => {
   }, [user, navigate]);
 
   if (user) {
-    return null; // Will redirect
+    return null; 
   }
   return (
     <div className="landing-page">

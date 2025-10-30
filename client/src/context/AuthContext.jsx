@@ -21,7 +21,6 @@ export function AuthProvider({ children }) {
     if (savedUser) {
       try {
         const user = JSON.parse(savedUser);
-        // Standardize profile picture field name coming from different backends
         if (user.profile_picture && !user.profilePicture) {
           user.profilePicture = user.profile_picture;
         }
@@ -51,25 +50,25 @@ export function AuthProvider({ children }) {
     }
   };
 
-  const login = async (credentials) => {
-    try {
-      const response = await axios.post('/login', credentials);
-      const { token, user } = response.data;
-      if (user && user.profile_picture && !user.profilePicture) {
-        user.profilePicture = user.profile_picture;
-      }
-      localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify(user));
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      setCurrentUser(user);
-      return { success: true };
-    } catch (error) {
-      return {
-        success: false,
-        error: error.response?.data?.message || 'Login failed'
-      };
+  const login = async (formData) => {
+  try {
+    const response = await axios.post('/login', formData);
+    const { token, user } = response.data;
+    if (user && user.profile_picture && !user.profilePicture) {
+      user.profilePicture = user.profile_picture;
     }
-  };
+    localStorage.setItem('token', token);
+    localStorage.setItem('user', JSON.stringify(user));
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    setCurrentUser(user);
+    return { success: true };
+  } catch (error) {
+    return {
+      success: false,
+      error: error.response?.data?.message || 'Login failed'
+    };
+  }
+};
 
   const logout = () => {
     localStorage.removeItem('token');
