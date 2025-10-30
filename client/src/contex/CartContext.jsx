@@ -72,4 +72,21 @@ export const CartProvider = ({ children }) => {
       {children}
     </CartContext.Provider>
   );
+  
 };
+const removeFromCart = (id) => {
+  if (!id) {
+    console.error('Invalid id provided to removeFromCart');
+    return;
+  }
+  
+  const newCart = cart.filter(item => item.id !== id);
+  setCart(newCart);
+  localStorage.setItem('cart', JSON.stringify(newCart));
+};
+
+return (
+  <CartContext.Provider value={{ cart, addToCart, removeFromCart }}>
+    {children}
+  </CartContext.Provider>
+);
