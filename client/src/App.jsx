@@ -21,7 +21,6 @@ import FarmerProfile from './pages/FarmerProfile';
 import MessagesPage from './pages/MessagesPage';
 import './App.css';
 
-
 function DashboardRouter() {
   const { currentUser } = useAuth();
   
