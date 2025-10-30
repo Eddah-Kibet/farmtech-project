@@ -20,3 +20,50 @@ import ChatPage from './pages/ChatPage';
 import FarmerProfile from './pages/FarmerProfile';
 import MessagesPage from './pages/MessagesPage';
 import './App.css';
+
+
+function DashboardRouter() {
+  const { currentUser } = useAuth();
+  
+  if (!currentUser) {
+    return <Navigate to="/login" replace />;
+  }
+  
+  return currentUser.role === 'farmer' ? 
+    <FarmerDashboard /> : 
+    <BuyerDashboard />;
+}
+
+function App() {
+  return (
+    <ThemeProvider>
+      <AuthProvider>
+        <CartProvider>
+          <Router>
+            <div className="App">
+              <Navigation />
+              <Routes>
+                <Route path="/" element={<LandingPage />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/marketplace" element={<Marketplace />} />
+                <Route path="/dashboard" element={<DashboardRouter />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/add-product" element={<AddProduct />} />
+                <Route path="/edit-product/:id" element={<EditProduct />} />
+                <Route path="/my-products" element={<MyProducts />} />
+                <Route path="/orders" element={<OrdersPage />} />
+                <Route path="/order-history" element={<OrderHistoryPage />} />
+                <Route path="/messages" element={<MessagesPage />} />
+                <Route path="/chat/:userId" element={<ChatPage />} />
+                <Route path="/farmer-profile/:farmerId" element={<FarmerProfile />} />
+              </Routes>
+            </div>
+          </Router>
+        </CartProvider>
+      </AuthProvider>
+    </ThemeProvider>
+  );
+}
+
+export default App;
