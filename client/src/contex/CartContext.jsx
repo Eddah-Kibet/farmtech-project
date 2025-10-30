@@ -123,3 +123,23 @@ return (
     {children}
   </CartContext.Provider>
 );
+const getTotalPrice = () => {
+  return cart.reduce((sum, item) => {
+    const price = item.price || 0;
+    const quantity = item.quantity || 0;
+    return sum + (price * quantity);
+  }, 0);
+};
+
+return (
+  <CartContext.Provider value={{ 
+    cart, 
+    addToCart, 
+    removeFromCart, 
+    updateQuantity, 
+    clearCart, 
+    getTotalPrice 
+  }}>
+    {children}
+  </CartContext.Provider>
+);
