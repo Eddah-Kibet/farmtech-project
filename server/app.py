@@ -14,12 +14,13 @@ from datetime import timedelta
 load_dotenv()
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI')
-app.config['JWT_SECRET_KEY'] = os.getenv('SECRET_KEY')
-app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=24)
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI', 'sqlite:///farm_marketplace.db')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['JWT_SECRET_KEY'] = os.getenv('SECRET_KEY', 'farm-marketplace-secret-key-2024')
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=7)
 db.init_app(app)
 migrate = Migrate(app, db)
-CORS(app)
+CORS(app, supports_credentials=True, origins=["http://localhost:5173"])
 jwt = JWTManager(app)
 
 # Ensure uploads directory exists
@@ -62,23 +63,27 @@ def register():
 
 @app.route('/login', methods=['POST'])
 def login():
-    try:
-        data = request.get_json()
-        if not all(k in data for k in ['email', 'password']):
-            return jsonify({'message': 'Missing email or password'}), 400
-        
-        user = User.query.filter_by(email=data['email']).first()
-        if user and user.check_password(data['password']):
-            token = create_access_token(identity=user.id)
-            return jsonify({
-                'token': token,
-                'user': user.to_dict()
-            })
-        
-        return jsonify({'message': 'Invalid credentials'}), 401
-        
-    except Exception as e:
-        return jsonify({'message': str(e)}), 500
+    data = request.get_json()
+
+    if not data or 'email' not in data or 'password' not in data:
+        return jsonify({"error": "Missing email or password"}), 400
+
+    user = User.query.filter_by(email=data['email']).first()
+
+    if not user or not check_password_hash(user.password, data['password']):
+        return jsonify({"error": "Invalid credentials"}), 401
+
+    access_token = create_access_token(identity=user.id)
+    return jsonify({
+        "message": "Login successful",
+        "token": access_token,
+        "user": {
+            "id": user.id,
+            "name": user.name,
+            "email": user.email
+        }
+    }), 200
+
 
 @app.route('/products', methods=['GET'])
 def get_products():

@@ -1,36 +1,31 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 
-const AuthContext = createContext(null);
+const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Configure axios base URL once
     axios.defaults.baseURL = 'http://localhost:5000';
+    axios.defaults.withCredentials = true;
+  }, []);
 
+  useEffect(() => {
     const token = localStorage.getItem('token');
     const savedUser = localStorage.getItem('user');
-
+    if (savedUser) {
+      const user = JSON.parse(savedUser);
+      // Standardize profile picture field
+      if (user.profile_picture && !user.profilePicture) {
+        user.profilePicture = user.profile_picture;
+      }
+      setCurrentUser(user);
+    }
     if (token) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     }
-
-    if (savedUser) {
-      try {
-        const user = JSON.parse(savedUser);
-        if (user.profile_picture && !user.profilePicture) {
-          user.profilePicture = user.profile_picture;
-        }
-        setCurrentUser(user);
-      } catch (e) {
-        console.error('Failed to parse saved user from localStorage', e);
-        localStorage.removeItem('user');
-      }
-    }
-
     setLoading(false);
   }, []);
 
@@ -38,7 +33,8 @@ export function AuthProvider({ children }) {
     try {
       const response = await axios.post('/register', userData);
       const user = response.data.user;
-      if (user && user.profile_picture && !user.profilePicture) {
+      // Standardize profile picture field
+      if (user.profile_picture) {
         user.profilePicture = user.profile_picture;
       }
       return { success: true, user };
@@ -50,25 +46,26 @@ export function AuthProvider({ children }) {
     }
   };
 
-  const login = async (formData) => {
-  try {
-    const response = await axios.post('/login', formData);
-    const { token, user } = response.data;
-    if (user && user.profile_picture && !user.profilePicture) {
-      user.profilePicture = user.profile_picture;
+  const login = async ({ email, password }) => {
+    try {
+      const response = await axios.post('/login', { email, password });
+      const { token, user } = response.data;
+      // Standardize profile picture field
+      if (user.profile_picture) {
+        user.profilePicture = user.profile_picture;
+      }
+      localStorage.setItem('token', token);
+      localStorage.setItem('user', JSON.stringify(user));
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      setCurrentUser(user);
+      return { success: true };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.response?.data?.message || 'Login failed'
+      };
     }
-    localStorage.setItem('token', token);
-    localStorage.setItem('user', JSON.stringify(user));
-    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    setCurrentUser(user);
-    return { success: true };
-  } catch (error) {
-    return {
-      success: false,
-      error: error.response?.data?.message || 'Login failed'
-    };
-  }
-};
+  };
 
   const logout = () => {
     localStorage.removeItem('token');
@@ -78,6 +75,7 @@ export function AuthProvider({ children }) {
   };
 
   const updateUser = (updatedUser) => {
+    // Standardize profile picture field
     const user = { ...updatedUser };
     if (user.profile_picture && !user.profilePicture) {
       user.profilePicture = user.profile_picture;
@@ -88,11 +86,11 @@ export function AuthProvider({ children }) {
 
   const value = {
     currentUser,
-    loading,
     register,
     login,
     logout,
-    updateUser
+    updateUser,
+    loading
   };
 
   return (

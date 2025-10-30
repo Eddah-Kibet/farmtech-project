@@ -1,6 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy_serializer import SerializerMixin
 from datetime import datetime
+from sqlalchemy import select
 import werkzeug.security as security
 
 db = SQLAlchemy()
@@ -18,7 +19,7 @@ class User(db.Model, SerializerMixin):
     name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
-    role = db.Column(db.String(20), nullable=False)  # 'farmer' or 'buyer'
+    role = db.Column(db.String(20), nullable=False) 
     phone_number = db.Column(db.String(20))
     profile_picture = db.Column(db.String(200))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
@@ -36,14 +37,13 @@ class User(db.Model, SerializerMixin):
 
     def check_password(self, password):
         return security.check_password_hash(self.password, password)
-
+    
     def to_dict(self):
         return {
             'id': self.id,
             'name': self.name,
             'email': self.email,
             'role': self.role,
-            'phone_number': self.phone_number,
             'profile_picture': self.profile_picture,
             'created_at': self.created_at.isoformat() if self.created_at else None
         }
@@ -57,10 +57,9 @@ class Product(db.Model, SerializerMixin):
     category = db.Column(db.String(50))
     stock = db.Column(db.Integer, nullable=False)
     description = db.Column(db.Text)
-    farmer_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
-    
+    farmer_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     orders = db.relationship('Order', secondary=order_product, backref=db.backref('order_products', lazy=True))
     ratings = db.relationship('Rating', backref='product', lazy=True)
     
@@ -83,12 +82,13 @@ class Product(db.Model, SerializerMixin):
 class Order(db.Model, SerializerMixin):
     __tablename__ = 'orders'
     id = db.Column(db.Integer, primary_key=True)
-    buyer_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     status = db.Column(db.String(20), default='pending')  # pending, confirmed, delivered
     total_amount = db.Column(db.Float, nullable=False, default=0.0)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
     serialize_rules = ('-buyer.orders', '-products.orders')
+
+    buyer_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
     def to_dict(self):
         return {
@@ -106,8 +106,6 @@ class Order(db.Model, SerializerMixin):
         }
 
     def get_product_quantity(self, product_id):
-        
-        from sqlalchemy import select
         stmt = select(order_product.c.quantity).where(
             order_product.c.order_id == self.id,
             order_product.c.product_id == product_id
@@ -127,6 +125,7 @@ class Rating(db.Model, SerializerMixin):
 
     serialize_rules = ('-buyer.ratings_given', '-rated_farmer.ratings_received', '-product.ratings')
 
+    buyer_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False) 
     def to_dict(self):
         return {
             'id': self.id,

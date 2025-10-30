@@ -19,6 +19,7 @@ const Login = () => {
     e.preventDefault();
     const result = await login(formData);
     if (result.success) {
+      alert('Login successful!');
       navigate('/marketplace');
     } else {
       alert(result.error);
@@ -29,7 +30,7 @@ const Login = () => {
     <div className="auth-page">
       <div className="auth-container">
         <h1>Sign In</h1>
-        <form onSubmit={handleSubmit} className="auth-form">
+        <form className="auth-form" onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="email">Email</label>
             <input
