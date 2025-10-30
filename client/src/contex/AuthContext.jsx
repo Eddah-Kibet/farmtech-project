@@ -89,3 +89,12 @@ const login = async (credentials) => {
     };
   }
 };
+const logout = () => {
+  localStorage.removeItem('token');
+  localStorage.removeItem('user');
+  setCurrentUser(null);
+};
+const updateUser = (updatedUser) => {
+  setCurrentUser(updatedUser);
+  localStorage.setItem('user', JSON.stringify(updatedUser));
+};
