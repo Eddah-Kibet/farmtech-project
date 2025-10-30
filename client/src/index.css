@@ -52,3 +52,20 @@ code {
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
+/* Consistent button heights */
+button, .btn, input[type="submit"] {
+  min-height: 40px;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .btn-standard {
+    min-height: 44px;
+    padding: 0.875rem 1.25rem;
+  }
+  
+  .input-standard {
+    min-height: 44px;
+    padding: 0.875rem 1rem;
+  }
+}
