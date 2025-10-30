@@ -128,3 +128,50 @@ useEffect(() => {
   }
   setLoading(false);
 }, []);
+const register = async (userData) => {
+  try {
+    const response = await axios.post('/register', userData);
+    const user = response.data.user;
+    // Standardize profile picture field
+    if (user.profile_picture && !user.profilePicture) {
+      user.profilePicture = user.profile_picture;
+    }
+    return { success: true, user };
+  } catch (error) {
+    return {
+      success: false,
+      error: error.response?.data?.message || 'Registration failed'
+    };
+  }
+};
+
+const login = async (credentials) => {
+  try {
+    const response = await axios.post('/login', credentials);
+    const { token, user } = response.data;
+    // Standardize profile picture field
+    if (user.profile_picture && !user.profilePicture) {
+      user.profilePicture = user.profile_picture;
+    }
+    localStorage.setItem('token', token);
+    localStorage.setItem('user', JSON.stringify(user));
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    setCurrentUser(user);
+    return { success: true };
+  } catch (error) {
+    return {
+      success: false,
+      error: error.response?.data?.message || 'Login failed'
+    };
+  }
+};
+
+const updateUser = (updatedUser) => {
+  // Standardize profile picture field
+  const user = { ...updatedUser };
+  if (user.profile_picture && !user.profilePicture) {
+    user.profilePicture = user.profile_picture;
+  }
+  setCurrentUser(user);
+  localStorage.setItem('user', JSON.stringify(user));
+};
