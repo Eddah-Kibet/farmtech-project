@@ -47,3 +47,14 @@ export const ThemeProvider = ({ children }) => {
     </ThemeContext.Provider>
   );
 };
+const toggleTheme = () => {
+  const newTheme = !isDarkMode;
+  setIsDarkMode(newTheme);
+  localStorage.setItem('theme', newTheme ? 'dark' : 'light');
+};
+
+return (
+  <ThemeContext.Provider value={{ isDarkMode, toggleTheme }}>
+    {children}
+  </ThemeContext.Provider>
+);
