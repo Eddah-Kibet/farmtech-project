@@ -61,4 +61,16 @@ export function useAuth() {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
-} 
+}
+const register = async (userData) => {
+  try {
+    const response = await axios.post('/register', userData);
+    const user = response.data.user;
+    return { success: true, user };
+  } catch (error) {
+    return {
+      success: false,
+      error: error.response?.data?.message || 'Registration failed'
+    };
+  }
+}; 
