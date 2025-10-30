@@ -90,3 +90,26 @@ return (
     {children}
   </CartContext.Provider>
 );
+const updateQuantity = (id, quantity) => {
+  if (!id) {
+    console.error('Invalid id provided to updateQuantity');
+    return;
+  }
+  
+  if (quantity <= 0) {
+    removeFromCart(id);
+    return;
+  }
+  
+  const newCart = cart.map(item =>
+    item.id === id ? { ...item, quantity: Math.max(0, quantity) } : item
+  );
+  setCart(newCart);
+  localStorage.setItem('cart', JSON.stringify(newCart));
+};
+
+return (
+  <CartContext.Provider value={{ cart, addToCart, removeFromCart, updateQuantity }}>
+    {children}
+  </CartContext.Provider>
+);
