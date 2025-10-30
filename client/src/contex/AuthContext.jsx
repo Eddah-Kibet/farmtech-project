@@ -175,3 +175,26 @@ const updateUser = (updatedUser) => {
   setCurrentUser(user);
   localStorage.setItem('user', JSON.stringify(user));
 };
+ const value = {
+    currentUser,
+    register,
+    login,
+    logout,
+    updateUser,
+    loading
+  };
+
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+    </AuthContext.Provider>
+  );
+}
+
+export function useAuth() {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+}
