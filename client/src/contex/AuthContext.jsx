@@ -98,3 +98,16 @@ const updateUser = (updatedUser) => {
   setCurrentUser(updatedUser);
   localStorage.setItem('user', JSON.stringify(updatedUser));
 };
+import axios from 'axios'; // FIX: Added missing import
+
+// Add to AuthProvider component:
+useEffect(() => {
+  axios.defaults.baseURL = 'http://localhost:5000';
+}, []);
+
+useEffect(() => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  }
+}, []);
