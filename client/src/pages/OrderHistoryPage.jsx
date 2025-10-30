@@ -54,7 +54,7 @@ const OrderHistoryPage = () => {
         <div className="orders-list">
           {orders.length === 0 ? (
             <div className="empty-orders">
-              <div className="empty-icon">📦</div>
+              <div className="empty-icon"></div>
               <h3>No completed orders yet</h3>
               <p>Your confirmed orders (successful transactions) will appear here.</p>
               <button
