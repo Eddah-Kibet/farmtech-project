@@ -76,3 +76,99 @@ const MarketplacePage = () => {
   if (!currentUser) {
     return null;
   }
+
+  const handleReviewSubmitted = () => {
+    setShowReviewForm(false);
+    setSelectedProduct(null);
+    // Clear URL parameters
+    navigate('/marketplace', { replace: true });
+  };
+
+  return (
+    <div className="marketplace-page">
+      <div className="marketplace-container">
+        <h1>Marketplace</h1>
+        <p>Browse and shop for fresh farm produce</p>
+
+        {/* Review Form Modal */}
+        {showReviewForm && selectedProduct && (
+          <div className="review-modal">
+            <div className="review-modal-content">
+              <div className="review-modal-header">
+                <h2>Review {selectedProduct.name}</h2>
+                <button
+                  className="close-modal-btn"
+                  onClick={() => {
+                    setShowReviewForm(false);
+                    setSelectedProduct(null);
+                    navigate('/marketplace', { replace: true });
+                  }}
+                >
+                  ×
+                </button>
+              </div>
+              <div className="review-modal-body">
+                <div className="product-preview">
+                  <img src={selectedProduct.image} alt={selectedProduct.name} />
+                  <div className="product-details">
+                    <h3>{selectedProduct.name}</h3>
+                    <p>{selectedProduct.description}</p>
+                    <p className="price">KSh {selectedProduct.price.toLocaleString()}</p>
+                  </div>
+                </div>
+                <ReviewForm
+                  productId={selectedProduct.id}
+                  farmerId={selectedProduct.farmer_id}
+                  onReviewSubmitted={handleReviewSubmitted}
+                />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Search and Filter Controls */}
+        <div className="marketplace-controls">
+          <div className="search-bar">
+            <input
+              type="text"
+              placeholder="Search products..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="search-input"
+            />
+          </div>
+          <div className="category-filter">
+            <label htmlFor="category-select" className="category-label">Category:</label>
+            <select
+              id="category-select"
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              className="category-select"
+            >
+              <option value="All">All Categories</option>
+              <option value="Vegetables">Vegetables</option>
+              <option value="Fruits">Fruits</option>
+              <option value="Dairy">Dairy</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Products Grid */}
+        <div className="products-grid">
+          {filteredProducts.length === 0 ? (
+            <div className="no-products">
+              <p>No products found matching your criteria.</p>
+            </div>
+          ) : (
+            filteredProducts.map(product => (
+              <ProductCard key={product.id} product={product} />
+            ))
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default MarketplacePage;
