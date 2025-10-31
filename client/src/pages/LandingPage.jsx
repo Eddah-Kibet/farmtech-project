@@ -4,16 +4,16 @@ import { useAuth } from '../context/AuthContext';
 import './LandingPage.css';
 
 const LandingPage = () => {
-  const { user } = useAuth();
+  const { currentUser } = useAuth();
   const navigate = useNavigate();
 
   React.useEffect(() => {
-    if (user) {
+    if (currentUser) {
       navigate('/marketplace');
     }
-  }, [user, navigate]);
+  }, [currentUser, navigate]);
 
-  if (user) {
+  if (currentUser) {
     return null; 
   }
   return (

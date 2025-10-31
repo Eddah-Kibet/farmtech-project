@@ -8,9 +8,14 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+<<<<<<< HEAD
     axios.defaults.baseURL = 'http://localhost:5000';
     axios.defaults.withCredentials = true;
   }, []);
+=======
+    // Configure axios base URL for development
+    axios.defaults.baseURL = import.meta.env.DEV ? '/api' : 'http://localhost:5000';
+>>>>>>> 79aea74 (ipdated)
 
   useEffect(() => {
     const token = localStorage.getItem('token');

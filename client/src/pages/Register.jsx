@@ -102,7 +102,11 @@ const Register = () => {
               type="file"
               id="profilePicture"
               name="profilePicture"
+<<<<<<< HEAD
               accept=".png,.jpg,.jpeg,image/*"
+=======
+              accept="image/*"
+>>>>>>> 79aea74 (ipdated)
               onChange={handleChange}
               className="file-input"
             />

@@ -61,14 +61,14 @@ const ProductCard = ({ product }) => {
   // }, [currentUser, product.id]);
 
   return (
-    <div className="bg-gradient-to-br from-white to-gray-50 rounded-xl shadow-md hover:shadow-xl hover:shadow-green-500/15 transition-all duration-300 hover:-translate-y-1 hover:scale-102 overflow-hidden border-0 max-w-xs">
+    <div className="bg-gradient-to-br from-white to-gray-50 rounded-xl shadow-md hover:shadow-xl hover:shadow-green-500/15 transition-all duration-300 hover:-translate-y-1 hover:scale-102 overflow-hidden border-0 max-w-xs flex flex-col">
       <img 
         src={product.image} 
         alt={product.name} 
         className="w-full h-28 object-cover" 
         loading="lazy"
       />
-      <div className="p-2.5">
+      <div className="p-2.5 flex flex-col h-full">
         <h3 className="text-sm font-semibold text-gray-800 mb-1.5">{product.name}</h3>
         <p className="text-xs text-gray-600 mb-1.5">
           Farmer: <span
@@ -87,7 +87,7 @@ const ProductCard = ({ product }) => {
             </button>
           )}
         </p>
-        <p className="text-xs text-gray-600 mb-2 line-clamp-2">{product.description}</p>
+        <p className="text-xs text-gray-600 mb-2 line-clamp-2 flex-grow">{product.description}</p>
         <div className="flex justify-between items-center mb-2">
           <span className="text-sm font-bold text-green-600">KSh {price.toFixed(2)}</span>
           <span className="text-xs text-gray-500">Stock: {product.stock}</span>
@@ -117,9 +117,9 @@ const ProductCard = ({ product }) => {
         </div>
 
         {currentUser && currentUser.role === 'buyer' && (
-          <>
+          <div className="flex gap-2 mt-auto">
             <button
-              className={`w-full py-1.5 px-3 rounded-lg font-medium transition-all duration-300 mb-1.5 text-sm ${
+              className={`flex-1 py-1.5 px-3 rounded-lg font-medium transition-all duration-300 text-sm ${
                 product.stock === 0
                   ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                   : 'bg-gradient-to-r from-green-500 to-green-600 text-white hover:from-green-600 hover:to-green-700 hover:-translate-y-0.5 hover:shadow-md hover:shadow-green-500/30'
@@ -131,12 +131,12 @@ const ProductCard = ({ product }) => {
             </button>
             
             <button
-              className="w-full py-1.5 px-3 rounded-lg font-medium bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md hover:shadow-blue-500/30 text-sm"
+              className="flex-1 py-1.5 px-3 rounded-lg font-medium bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md hover:shadow-blue-500/30 text-sm"
               onClick={() => setShowReviewForm(!showReviewForm)}
             >
               {showReviewForm ? 'Cancel Review' : 'Write Review'}
             </button>
-          </>
+          </div>
         )}
 
         {showReviewForm && (

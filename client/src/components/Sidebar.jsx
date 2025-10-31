@@ -31,18 +31,18 @@ const Sidebar = ({ isOpen, onClose }) => {
   const profilePicture = currentUser?.profilePicture || currentUser?.profile_picture;
 
   return (
-    <div className="sidebar-overlay" onClick={onClose}>
-      <div className="sidebar" onClick={(e) => e.stopPropagation()}>
+    <div className={`sidebar-overlay ${isOpen ? 'open' : ''}`} onClick={onClose}>
+      <div className={`sidebar ${isDarkMode ? 'dark' : ''}`} onClick={(e) => e.stopPropagation()}>
         {/* User Profile Section */}
         <div className="sidebar-user-section">
           <div className="sidebar-profile-pic">
-            {profilePicture ? (
+            {profilePicture && !profilePicture.includes('undefined') && !profilePicture.includes('null') ? (
               <img 
                 src={profilePicture.startsWith('http') ? profilePicture : `http://localhost:5000${profilePicture}`}
                 alt={currentUser.name}
-                className="sidebar-profile-pic"
                 onError={(e) => {
-                  e.target.src = '/placeholder-avatar.png';
+                  e.target.style.display = 'none';
+                  e.target.nextSibling.style.display = 'flex';
                 }}
               />
             ) : (

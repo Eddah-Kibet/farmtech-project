@@ -1,0 +1,3 @@
+- [x] Fix sidebar not closing when clicking outside: Add onClick handler to sidebar overlay in Sidebar.jsx
+- [x] Increase navbar height slightly: Change py-4 to py-5 in Navigation.jsx
+- [x] Remove borderline from navbar: Remove border-b border-white/10 from Navigation.jsx
