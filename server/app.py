@@ -14,6 +14,11 @@ from datetime import timedelta
 load_dotenv()
 
 app = Flask(__name__)
+# Use absolute path for database
+db_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'instance', 'marketplace.db')
+app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
+app.config['JWT_SECRET_KEY'] = os.getenv('SECRET_KEY')
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=24)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI', 'sqlite:///farm_marketplace.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['JWT_SECRET_KEY'] = os.getenv('SECRET_KEY', 'farm-marketplace-secret-key-2024')
@@ -613,4 +618,8 @@ def get_farmer_profile(farmer_id):
         return jsonify({'message': str(e)}), 500
 
 if __name__ == '__main__':
+    # Ensure instance directory exists
+    os.makedirs('instance', exist_ok=True)
+    with app.app_context():
+        db.create_all()
     app.run(debug=True, port=5000)
