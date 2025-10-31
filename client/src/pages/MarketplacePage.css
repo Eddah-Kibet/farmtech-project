@@ -3,10 +3,12 @@
   min-height: 100vh;
   background: #f8f9fa;
   padding-top: 1rem;
+  font-size: 16px;
 }
 
 .dark-mode .marketplace-page {
   background: #1a1a1a;
+  color: #ffffff;
 }
 
 .marketplace-container {
@@ -105,10 +107,13 @@
 
 .products-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, 150px);
-  gap: 0.8rem;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
   margin-top: 2rem;
   justify-content: center;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .no-products {
@@ -254,31 +259,46 @@
 }
 
 @media (max-width: 768px) {
+  .marketplace-page {
+    font-size: 14px;
+  }
+
   .marketplace-container {
     padding: 1rem;
   }
-  
+
   .marketplace-controls {
     flex-direction: column;
     align-items: stretch;
   }
-  
+
   .search-bar {
     min-width: auto;
   }
-  
+
   .products-grid {
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 1rem;
   }
-  
+
   .review-modal-content {
     margin: 0.5rem;
   }
-  
+
   .product-preview {
     flex-direction: column;
     text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .marketplace-page {
+    font-size: 12px;
+  }
+
+  .products-grid {
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
   }
 }
 

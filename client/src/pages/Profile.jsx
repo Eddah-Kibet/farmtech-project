@@ -20,7 +20,7 @@ const Profile = () => {
     confirmPassword: ''
   });
   const [loading, setLoading] = useState(false);
-  const [preview, setPreview] = useState(currentUser?.profilePicture || null);
+  const [preview, setPreview] = useState(null);
   const [message, setMessage] = useState({ text: '', type: '' });
 
   useEffect(() => {
@@ -55,8 +55,15 @@ const Profile = () => {
         }
       });
 
-      updateUser(response.data);
+      // Normalize the response
+      const updatedUser = {
+        ...response.data,
+        profilePicture: response.data.profile_picture || response.data.profilePicture
+      };
+
+      updateUser(updatedUser);
       setShowEditModal(false);
+      setPreview(null);
       showMessage('Profile updated successfully!', 'success');
     } catch (error) {
       console.error('Error updating profile:', error);
@@ -145,6 +152,21 @@ const Profile = () => {
     return baseStats;
   };
 
+  // Get profile picture with proper fallback
+  const getProfilePictureUrl = () => {
+    const pic = currentUser?.profilePicture || currentUser?.profile_picture;
+    
+    if (!pic || pic === 'null' || pic === 'undefined' || pic.trim() === '') {
+      return null;
+    }
+    
+    return pic;
+  };
+
+  const generatePlaceholderSVG = (initial) => {
+    return `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Crect fill='%234CAF50' width='120' height='120'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.35em' fill='white' font-size='48' font-weight='bold'%3E${initial}%3C/text%3E%3C/svg%3E`;
+  };
+
   if (!currentUser) {
     return (
       <div className="profile-loading">
@@ -155,6 +177,8 @@ const Profile = () => {
   }
 
   const stats = getRoleStats();
+  const profilePictureUrl = getProfilePictureUrl();
+  const placeholderSVG = generatePlaceholderSVG(currentUser?.name?.charAt(0).toUpperCase() || 'U');
 
   return (
     <div className="profile-page">
@@ -176,15 +200,11 @@ const Profile = () => {
             <div className="profile-avatar-section">
               <div className="profile-picture-container">
                 <img
-                  src={currentUser?.profilePicture ? 
-                    (currentUser.profilePicture.startsWith('http') ? 
-                      currentUser.profilePicture : 
-                      `http://localhost:5000${currentUser.profilePicture}`) : 
-                    '/default-avatar.png'}
+                  src={profilePictureUrl || placeholderSVG}
                   alt="Profile"
                   className="profile-picture"
                   onError={(e) => {
-                    e.target.src = '/default-avatar.png';
+                    e.target.src = placeholderSVG;
                   }}
                 />
                 <div className="profile-status"></div>
@@ -221,21 +241,21 @@ const Profile = () => {
             {currentUser.role === 'buyer' ? (
               <>
                 <div className="stat-card">
-                  <div className="stat-icon orders"></div>
+                  <div className="stat-icon orders">📦</div>
                   <div className="stat-content">
                     <div className="stat-number">{stats.orders}</div>
                     <div className="stat-label">Total Orders</div>
                   </div>
                 </div>
                 <div className="stat-card">
-                  <div className="stat-icon reviews"></div>
+                  <div className="stat-icon reviews">⭐</div>
                   <div className="stat-content">
                     <div className="stat-number">{stats.reviews}</div>
                     <div className="stat-label">Reviews</div>
                   </div>
                 </div>
                 <div className="stat-card">
-                  <div className="stat-icon favorites"></div>
+                  <div className="stat-icon favorites">❤️</div>
                   <div className="stat-content">
                     <div className="stat-number">{stats.favorites}</div>
                     <div className="stat-label">Favorites</div>
@@ -245,21 +265,21 @@ const Profile = () => {
             ) : (
               <>
                 <div className="stat-card">
-                  <div className="stat-icon listings"></div>
+                  <div className="stat-icon listings">📋</div>
                   <div className="stat-content">
                     <div className="stat-number">{stats.listings}</div>
                     <div className="stat-label">Active Listings</div>
                   </div>
                 </div>
                 <div className="stat-card">
-                  <div className="stat-icon sales"></div>
+                  <div className="stat-icon sales">💰</div>
                   <div className="stat-content">
                     <div className="stat-number">{stats.sales}</div>
                     <div className="stat-label">Total Sales</div>
                   </div>
                 </div>
                 <div className="stat-card">
-                  <div className="stat-icon rating"></div>
+                  <div className="stat-icon rating">⭐</div>
                   <div className="stat-content">
                     <div className="stat-number">{stats.rating}</div>
                     <div className="stat-label">Seller Rating</div>
@@ -272,7 +292,15 @@ const Profile = () => {
           <div className="profile-actions">
             <button
               className="btn btn-primary"
-              onClick={() => setShowEditModal(true)}
+              onClick={() => {
+                setEditForm({
+                  name: currentUser.name,
+                  email: currentUser.email,
+                  profilePicture: null
+                });
+                setPreview(null);
+                setShowEditModal(true);
+              }}
             >
               <i className="icon-edit"></i>
               Edit Profile
@@ -339,9 +367,9 @@ const Profile = () => {
                     Choose Image
                   </label>
                 </div>
-                {preview && (
+                {(preview || profilePictureUrl) && (
                   <div className="image-preview">
-                    <img src={preview} alt="Preview" />
+                    <img src={preview || profilePictureUrl} alt="Preview" />
                     <button 
                       type="button" 
                       className="remove-image"

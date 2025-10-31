@@ -98,6 +98,12 @@ const AuthPage = () => {
 
       if (result.success) {
         console.log(`${isSignUp ? 'Registration' : 'Login'} successful!`);
+        if (isSignUp) {
+          // After successful registration, switch to login mode
+          setIsSignUp(false);
+          resetForm();
+          setError('');
+        }
       } else {
         setError(result.error || `Something went wrong during ${isSignUp ? 'registration' : 'login'}`);
       }

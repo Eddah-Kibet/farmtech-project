@@ -8,45 +8,49 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-<<<<<<< HEAD
-    axios.defaults.baseURL = 'http://localhost:5000';
-    axios.defaults.withCredentials = true;
-  }, []);
-=======
     // Configure axios base URL for development
     axios.defaults.baseURL = import.meta.env.DEV ? '/api' : 'http://localhost:5000';
->>>>>>> 79aea74 (ipdated)
+  }, []);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
     const savedUser = localStorage.getItem('user');
-    if (savedUser) {
-      const user = JSON.parse(savedUser);
-      // Standardize profile picture field
-      if (user.profile_picture && !user.profilePicture) {
-        user.profilePicture = user.profile_picture;
-      }
-      setCurrentUser(user);
-    }
+
     if (token) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    }
+
+    if (savedUser) {
+      try {
+        const user = JSON.parse(savedUser);
+        // NORMALIZE PROFILE PICTURE - Always use profilePicture in frontend
+        const normalizedUser = {
+          ...user,
+          profilePicture: user.profile_picture || user.profilePicture || null
+        };
+        setCurrentUser(normalizedUser);
+      } catch (e) {
+        console.error('Failed to parse saved user from localStorage', e);
+        localStorage.removeItem('user');
+      }
     }
     setLoading(false);
   }, []);
 
   const register = async (userData) => {
     try {
+      console.log('Attempting registration with:', userData);
       const response = await axios.post('/register', userData);
-      const user = response.data.user;
-      // Standardize profile picture field
-      if (user.profile_picture) {
-        user.profilePicture = user.profile_picture;
-      }
-      return { success: true, user };
+      console.log('Registration response:', response.data);
+
+      // Don't automatically log in after registration
+      // Just return success and let the user login manually
+      return { success: true };
     } catch (error) {
+      console.error('Registration error:', error);
       return {
         success: false,
-        error: error.response?.data?.message || 'Registration failed'
+        error: error.response?.data?.message || error.message || 'Registration failed'
       };
     }
   };
@@ -55,14 +59,17 @@ export function AuthProvider({ children }) {
     try {
       const response = await axios.post('/login', { email, password });
       const { token, user } = response.data;
-      // Standardize profile picture field
-      if (user.profile_picture) {
-        user.profilePicture = user.profile_picture;
-      }
+      
+      // NORMALIZE PROFILE PICTURE - Always use profilePicture in frontend
+      const normalizedUser = {
+        ...user,
+        profilePicture: user.profile_picture || user.profilePicture || null
+      };
+      
       localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem('user', JSON.stringify(normalizedUser));
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      setCurrentUser(user);
+      setCurrentUser(normalizedUser);
       return { success: true };
     } catch (error) {
       return {
@@ -80,13 +87,13 @@ export function AuthProvider({ children }) {
   };
 
   const updateUser = (updatedUser) => {
-    // Standardize profile picture field
-    const user = { ...updatedUser };
-    if (user.profile_picture && !user.profilePicture) {
-      user.profilePicture = user.profile_picture;
-    }
-    setCurrentUser(user);
-    localStorage.setItem('user', JSON.stringify(user));
+    // NORMALIZE PROFILE PICTURE - Always use profilePicture in frontend
+    const normalizedUser = {
+      ...updatedUser,
+      profilePicture: updatedUser.profile_picture || updatedUser.profilePicture || null
+    };
+    setCurrentUser(normalizedUser);
+    localStorage.setItem('user', JSON.stringify(normalizedUser));
   };
 
   const value = {

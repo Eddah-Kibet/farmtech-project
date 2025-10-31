@@ -12,6 +12,8 @@ const Register = () => {
     profilePicture: null
   });
   const [preview, setPreview] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const { register } = useAuth();
   const navigate = useNavigate();
 
@@ -30,6 +32,9 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError('');
+    
     const userData = {
       name: formData.name,
       email: formData.email,
@@ -38,11 +43,15 @@ const Register = () => {
       profile_picture: preview
     };
 
+    console.log('Submitting registration:', userData);
     const result = await register(userData);
+    
+    setLoading(false);
     if (result.success) {
-      navigate('/login');
+      navigate('/marketplace');
     } else {
-      alert(result.error);
+      setError(result.error);
+      console.error('Registration failed:', result.error);
     }
   };
 
@@ -102,11 +111,7 @@ const Register = () => {
               type="file"
               id="profilePicture"
               name="profilePicture"
-<<<<<<< HEAD
               accept=".png,.jpg,.jpeg,image/*"
-=======
-              accept="image/*"
->>>>>>> 79aea74 (ipdated)
               onChange={handleChange}
               className="file-input"
             />
@@ -116,7 +121,14 @@ const Register = () => {
               </div>
             )}
           </div>
-          <button type="submit" className="auth-btn">Create Account</button>
+          {error && (
+            <div style={{color: 'red', fontSize: '0.9rem', marginBottom: '1rem'}}>
+              {error}
+            </div>
+          )}
+          <button type="submit" className="auth-btn" disabled={loading}>
+            {loading ? 'Creating Account...' : 'Create Account'}
+          </button>
         </form>
         <p className="auth-link">
           Already have an account? <Link to="/login">Sign in</Link>
