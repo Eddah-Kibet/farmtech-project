@@ -19,7 +19,7 @@ db_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'instance', '
 app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['JWT_SECRET_KEY'] = os.getenv('SECRET_KEY', 'farm-marketplace-secret-key-2024')
-app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=24)
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=7)
 db.init_app(app)
 migrate = Migrate(app, db)
 CORS(app, origins=['http://localhost:5173', 'http://localhost:5174'], supports_credentials=True)

@@ -1,13 +1,3 @@
-<<<<<<< HEAD
-/* General layout */
-.marketplace-page {
-  background-color: #f8fafc;
-  min-height: 100vh;
-  padding: 2rem;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-=======
 /* Marketplace Page Styles */
 .marketplace-page {
   min-height: 100vh;
@@ -317,7 +307,6 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 1.25rem;
->>>>>>> cbb4ae89c9761a32509f510b8ca6f0c539bc4c89
 }
 
 .marketplace-container {
