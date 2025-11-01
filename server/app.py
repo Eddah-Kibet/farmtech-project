@@ -32,7 +32,11 @@ os.makedirs('uploads', exist_ok=True)
 def home():
     return jsonify({'message': 'Farm Produce Marketplace API'})
 
-@app.route('/register', methods=['POST'])
+@app.route("/api/test")
+def test():
+    return {"message": "CORS and connection working!"}, 200
+
+@app.route('/api/register', methods=['POST'])
 def register():
     try:
         data = request.get_json()
@@ -63,7 +67,7 @@ def register():
     except Exception as e:
         return jsonify({'message': str(e)}), 500
 
-@app.route('/login', methods=['POST'])
+@app.route('/api/login', methods=['POST'])
 def login():
     try:
         data = request.get_json()
@@ -84,7 +88,7 @@ def login():
         return jsonify({'message': str(e)}), 500
 
 
-@app.route('/products', methods=['GET'])
+@app.route('/api/products', methods=['GET'])
 def get_products():
     try:
         category = request.args.get('category')
@@ -107,7 +111,7 @@ def get_products():
     except Exception as e:
         return jsonify({'message': str(e)}), 500
 
-@app.route('/products', methods=['POST'])
+@app.route('/api/products', methods=['POST'])
 @jwt_required()
 def create_product():
     try:
@@ -139,7 +143,7 @@ def create_product():
     except Exception as e:
         return jsonify({'message': str(e)}), 500
 
-@app.route('/products/<int:id>', methods=['GET'])
+@app.route('/api/products/<int:id>', methods=['GET'])
 def get_product(id):
     try:
         product = Product.query.get(id)
@@ -149,7 +153,7 @@ def get_product(id):
     except Exception as e:
         return jsonify({'message': str(e)}), 500
 
-@app.route('/products/<int:id>', methods=['PUT', 'DELETE'])
+@app.route('/api/products/<int:id>', methods=['PUT', 'DELETE'])
 @jwt_required()
 def manage_product(id):
     try:
@@ -179,7 +183,7 @@ def manage_product(id):
     except Exception as e:
         return jsonify({'message': str(e)}), 500
 
-@app.route('/orders', methods=['POST'])
+@app.route('/api/orders', methods=['POST'])
 @jwt_required()
 def create_order():
     try:
@@ -234,7 +238,7 @@ def create_order():
         db.session.rollback()
         return jsonify({'message': str(e)}), 500
 
-@app.route('/orders', methods=['GET'])
+@app.route('/api/orders', methods=['GET'])
 @jwt_required()
 def get_orders():
     try:
@@ -253,7 +257,7 @@ def get_orders():
     except Exception as e:
         return jsonify({'message': str(e)}), 500
 
-@app.route('/orders/<int:id>', methods=['PUT'])
+@app.route('/api/orders/<int:id>', methods=['PUT'])
 @jwt_required()
 def update_order(id):
     try:
@@ -276,7 +280,7 @@ def update_order(id):
     except Exception as e:
         return jsonify({'message': str(e)}), 500
 
-@app.route('/ratings', methods=['GET', 'POST'])
+@app.route('/api/ratings', methods=['GET', 'POST'])
 @jwt_required()
 def manage_ratings():
     try:
@@ -323,7 +327,7 @@ def manage_ratings():
     except Exception as e:
         return jsonify({'message': str(e)}), 500
 
-@app.route('/leaderboard', methods=['GET'])
+@app.route('/api/leaderboard', methods=['GET'])
 def get_leaderboard():
     try:
         leaderboard = db.session.query(
@@ -362,7 +366,7 @@ def get_leaderboard():
     except Exception as e:
         return jsonify({'message': str(e)}), 500
 
-@app.route('/certificates', methods=['GET'])
+@app.route('/api/certificates', methods=['GET'])
 @jwt_required()
 def get_certificate_eligibility():
     try:
@@ -384,7 +388,7 @@ def get_certificate_eligibility():
     except Exception as e:
         return jsonify({'message': str(e)}), 500
 
-@app.route('/users/profile', methods=['GET', 'PUT'])
+@app.route('/api/users/profile', methods=['GET', 'PUT'])
 @jwt_required()
 def manage_profile():
     try:
@@ -432,7 +436,7 @@ def manage_profile():
         db.session.rollback()
         return jsonify({'message': str(e)}), 500
 
-@app.route('/users/change-password', methods=['PUT'])
+@app.route('/api/users/change-password', methods=['PUT'])
 @jwt_required()
 def change_password():
     try:
@@ -458,11 +462,11 @@ def change_password():
         db.session.rollback()
         return jsonify({'message': str(e)}), 500
 
-@app.route('/uploads/<path:filename>')
+@app.route('/api/uploads/<path:filename>')
 def uploaded_file(filename):
     return send_from_directory('uploads', filename)
 
-@app.route('/messages', methods=['POST'])
+@app.route('/api/messages', methods=['POST'])
 @jwt_required()
 def send_message():
     try:
@@ -493,7 +497,7 @@ def send_message():
         db.session.rollback()
         return jsonify({'message': str(e)}), 500
 
-@app.route('/messages/<int:user_id>', methods=['GET'])
+@app.route('/api/messages/<int:user_id>', methods=['GET'])
 @jwt_required()
 def get_messages(user_id):
     try:
@@ -512,7 +516,7 @@ def get_messages(user_id):
     except Exception as e:
         return jsonify({'message': str(e)}), 500
 
-@app.route('/me', methods=['GET'])
+@app.route('/api/me', methods=['GET'])
 @jwt_required()
 def get_current_user():
     try:
@@ -522,7 +526,7 @@ def get_current_user():
     except Exception as e:
         return jsonify({'message': str(e)}), 500
 
-@app.route('/conversations', methods=['GET'])
+@app.route('/api/conversations', methods=['GET'])
 @jwt_required()
 def get_conversations():
     try:
@@ -555,7 +559,7 @@ def get_conversations():
     except Exception as e:
         return jsonify({'message': str(e)}), 500
 
-@app.route('/users/farmer/<int:farmer_id>', methods=['GET'])
+@app.route('/api/users/farmer/<int:farmer_id>', methods=['GET'])
 def get_farmer_profile(farmer_id):
     try:
         farmer = User.query.filter_by(id=farmer_id, role='farmer').first()
