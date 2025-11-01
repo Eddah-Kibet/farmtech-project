@@ -22,7 +22,7 @@ app.config['JWT_SECRET_KEY'] = os.getenv('SECRET_KEY', 'farm-marketplace-secret-
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=7)
 db.init_app(app)
 migrate = Migrate(app, db)
-CORS(app, origins=['http://localhost:5173', 'http://localhost:5174'], supports_credentials=True)
+CORS(app, origins=['http://localhost:5173', 'http://localhost:5174', 'https://phase-5-project-livid.vercel.app'], supports_credentials=True)
 jwt = JWTManager(app)
 
 # Ensure uploads directory exists
