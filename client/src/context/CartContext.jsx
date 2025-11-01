@@ -69,6 +69,12 @@ export const CartProvider = ({ children }) => {
     localStorage.removeItem('cart');
   };
 
+  const removePaidProducts = (paidProductIds) => {
+    const newCart = cart.filter(item => !paidProductIds.includes(item.id));
+    setCart(newCart);
+    localStorage.setItem('cart', JSON.stringify(newCart));
+  };
+
   const getTotalPrice = () => {
     return cart.reduce((sum, item) => {
       const price = item.price || 0;
@@ -84,7 +90,8 @@ export const CartProvider = ({ children }) => {
       removeFromCart,
       updateQuantity,
       clearCart,
-      getTotalPrice
+      getTotalPrice,
+      removePaidProducts
     }}>
       {children}
     </CartContext.Provider>

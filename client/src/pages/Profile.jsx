@@ -7,25 +7,21 @@ import './Profile.css';
 const Profile = () => {
   const { currentUser, updateUser } = useAuth();
   const navigate = useNavigate();
-
   const [showEditModal, setShowEditModal] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState({ text: '', type: '' });
-
   const [editForm, setEditForm] = useState({
     name: currentUser?.name || '',
     email: currentUser?.email || '',
-    profilePicture: null,
+    profilePicture: null
   });
-
   const [passwordForm, setPasswordForm] = useState({
     currentPassword: '',
     newPassword: '',
-    confirmPassword: '',
+    confirmPassword: ''
   });
-
-  const [preview, setPreview] = useState(currentUser?.profilePicture || null);
+  const [loading, setLoading] = useState(false);
+  const [preview, setPreview] = useState(null);
+  const [message, setMessage] = useState({ text: '', type: '' });
 
   useEffect(() => {
     if (!currentUser) {
@@ -55,12 +51,19 @@ const Profile = () => {
       const response = await axios.put('/users/profile', formData, {
         headers: {
           'Authorization': `Bearer ${token}`,
-          'Content-Type': 'multipart/form-data',
-        },
+          'Content-Type': 'multipart/form-data'
+        }
       });
 
-      updateUser(response.data);
+      // Normalize the response
+      const updatedUser = {
+        ...response.data,
+        profilePicture: response.data.profile_picture || response.data.profilePicture
+      };
+
+      updateUser(updatedUser);
       setShowEditModal(false);
+      setPreview(null);
       showMessage('Profile updated successfully!', 'success');
     } catch (error) {
       console.error('Error updating profile:', error);
@@ -88,19 +91,21 @@ const Profile = () => {
 
     try {
       const token = localStorage.getItem('token');
-      await axios.put(
-        '/users/change-password',
-        {
-          current_password: passwordForm.currentPassword,
-          new_password: passwordForm.newPassword,
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` },
+      await axios.put('/users/change-password', {
+        current_password: passwordForm.currentPassword,
+        new_password: passwordForm.newPassword
+      }, {
+        headers: {
+          'Authorization': `Bearer ${token}`
         }
-      );
+      });
 
       setShowPasswordModal(false);
-      setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
+      setPasswordForm({
+        currentPassword: '',
+        newPassword: '',
+        confirmPassword: ''
+      });
       showMessage('Password changed successfully!', 'success');
     } catch (error) {
       console.error('Error changing password:', error);
@@ -114,21 +119,21 @@ const Profile = () => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      // Validate file type and size
       const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
-      const maxSize = 5 * 1024 * 1024;
+      const maxSize = 5 * 1024 * 1024; // 5MB
 
       if (!validTypes.includes(file.type)) {
-        showMessage('Please select a valid image (JPEG, PNG, GIF)', 'error');
+        showMessage('Please select a valid image file (JPEG, PNG, GIF)', 'error');
         return;
       }
 
       if (file.size > maxSize) {
-        showMessage('Image must be smaller than 5MB', 'error');
+        showMessage('Image size should be less than 5MB', 'error');
         return;
       }
 
-      setEditForm((prev) => ({ ...prev, profilePicture: file }));
-
+      setEditForm(prev => ({ ...prev, profilePicture: file }));
       const reader = new FileReader();
       reader.onload = () => setPreview(reader.result);
       reader.readAsDataURL(file);
@@ -136,13 +141,30 @@ const Profile = () => {
   };
 
   const getRoleStats = () => {
-    if (currentUser.role === 'buyer') {
-      return { Orders: 12, Reviews: 8, Favorites: 5 };
-    } else if (currentUser.role === 'seller') {
-      return { Listings: 15, Sales: 42, Rating: '4.8⭐' };
-    } else {
-      return {};
+    const baseStats = {
+      orders: currentUser.role === 'buyer' ? 12 : 0,
+      reviews: currentUser.role === 'buyer' ? 8 : 0,
+      favorites: currentUser.role === 'buyer' ? 5 : 0,
+      listings: currentUser.role === 'seller' ? 15 : 0,
+      sales: currentUser.role === 'seller' ? 42 : 0,
+      rating: currentUser.role === 'seller' ? '4.8' : '0'
+    };
+    return baseStats;
+  };
+
+  // Get profile picture with proper fallback
+  const getProfilePictureUrl = () => {
+    const pic = currentUser?.profilePicture || currentUser?.profile_picture;
+    
+    if (!pic || pic === 'null' || pic === 'undefined' || pic.trim() === '') {
+      return null;
     }
+    
+    return pic;
+  };
+
+  const generatePlaceholderSVG = (initial) => {
+    return `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Crect fill='%234CAF50' width='120' height='120'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.35em' fill='white' font-size='48' font-weight='bold'%3E${initial}%3C/text%3E%3C/svg%3E`;
   };
 
   if (!currentUser) {
@@ -155,63 +177,139 @@ const Profile = () => {
   }
 
   const stats = getRoleStats();
+  const profilePictureUrl = getProfilePictureUrl();
+  const placeholderSVG = generatePlaceholderSVG(currentUser?.name?.charAt(0).toUpperCase() || 'U');
 
   return (
     <div className="profile-page">
-      {/* Toast Message */}
-      {message.text && <div className={`message-toast ${message.type}`}>{message.text}</div>}
+      {/* Message Toast */}
+      {message.text && (
+        <div className={`message-toast ${message.type}`}>
+          {message.text}
+        </div>
+      )}
 
       <div className="profile-container">
-        <h1>My Profile</h1>
+        <div className="profile-header">
+          <h1>My Profile</h1>
+          <p>Manage your account information and preferences</p>
+        </div>
 
         <div className="profile-card">
-          <div className="profile-header">
+          <div className="profile-main">
             <div className="profile-avatar-section">
-              <img
-                src={
-                  currentUser?.profilePicture
-                    ? currentUser.profilePicture.startsWith('http')
-                      ? currentUser.profilePicture
-                      : `http://localhost:5000${currentUser.profilePicture}`
-                    : '/default-avatar.png'
-                }
-                alt="Profile"
-                className="profile-picture"
-                onError={(e) => (e.target.src = '/default-avatar.png')}
-              />
-              <span className={`role-badge ${currentUser.role}`}>{currentUser.role}</span>
+              <div className="profile-picture-container">
+                <img
+                  src={profilePictureUrl || placeholderSVG}
+                  alt="Profile"
+                  className="profile-picture"
+                  onError={(e) => {
+                    e.target.src = placeholderSVG;
+                  }}
+                />
+                <div className="profile-status"></div>
+              </div>
+              <div className="profile-badges">
+                <span className={`role-badge ${currentUser.role}`}>
+                  {currentUser.role.charAt(0).toUpperCase() + currentUser.role.slice(1)}
+                </span>
+                <span className="status-badge">Active</span>
+              </div>
             </div>
 
             <div className="profile-info">
               <h2>{currentUser.name}</h2>
-              <p>{currentUser.email}</p>
-              <p>
-                Member since{' '}
-                {new Date(currentUser.created_at || Date.now()).toLocaleDateString('en-US', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                })}
-              </p>
+              <p className="profile-email">{currentUser.email}</p>
+              <div className="profile-meta">
+                <span className="meta-item">
+                  <i className="icon-calendar"></i>
+                  Member since {new Date(currentUser.created_at || Date.now()).toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                  })}
+                </span>
+                <span className="meta-item">
+                  <i className="icon-shield"></i>
+                  Account verified
+                </span>
+              </div>
             </div>
           </div>
 
-          {/* Stats */}
           <div className="profile-stats">
-            {Object.entries(stats).map(([key, value]) => (
-              <div className="stat-card" key={key}>
-                <div className="stat-number">{value}</div>
-                <div className="stat-label">{key}</div>
-              </div>
-            ))}
+            {currentUser.role === 'buyer' ? (
+              <>
+                <div className="stat-card">
+                  <div className="stat-icon orders">📦</div>
+                  <div className="stat-content">
+                    <div className="stat-number">{stats.orders}</div>
+                    <div className="stat-label">Total Orders</div>
+                  </div>
+                </div>
+                <div className="stat-card">
+                  <div className="stat-icon reviews">⭐</div>
+                  <div className="stat-content">
+                    <div className="stat-number">{stats.reviews}</div>
+                    <div className="stat-label">Reviews</div>
+                  </div>
+                </div>
+                <div className="stat-card">
+                  <div className="stat-icon favorites">❤️</div>
+                  <div className="stat-content">
+                    <div className="stat-number">{stats.favorites}</div>
+                    <div className="stat-label">Favorites</div>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="stat-card">
+                  <div className="stat-icon listings">📋</div>
+                  <div className="stat-content">
+                    <div className="stat-number">{stats.listings}</div>
+                    <div className="stat-label">Active Listings</div>
+                  </div>
+                </div>
+                <div className="stat-card">
+                  <div className="stat-icon sales">💰</div>
+                  <div className="stat-content">
+                    <div className="stat-number">{stats.sales}</div>
+                    <div className="stat-label">Total Sales</div>
+                  </div>
+                </div>
+                <div className="stat-card">
+                  <div className="stat-icon rating">⭐</div>
+                  <div className="stat-content">
+                    <div className="stat-number">{stats.rating}</div>
+                    <div className="stat-label">Seller Rating</div>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
 
-          {/* Actions */}
           <div className="profile-actions">
-            <button className="btn btn-primary" onClick={() => setShowEditModal(true)}>
+            <button
+              className="btn btn-primary"
+              onClick={() => {
+                setEditForm({
+                  name: currentUser.name,
+                  email: currentUser.email,
+                  profilePicture: null
+                });
+                setPreview(null);
+                setShowEditModal(true);
+              }}
+            >
+              <i className="icon-edit"></i>
               Edit Profile
             </button>
-            <button className="btn btn-secondary" onClick={() => setShowPasswordModal(true)}>
+            <button
+              className="btn btn-secondary"
+              onClick={() => setShowPasswordModal(true)}
+            >
+              <i className="icon-lock"></i>
               Change Password
             </button>
           </div>
@@ -224,57 +322,89 @@ const Profile = () => {
           <div className="modal" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h3>Edit Profile</h3>
-              <button className="modal-close" onClick={() => setShowEditModal(false)}>
+              <button
+                className="modal-close"
+                onClick={() => setShowEditModal(false)}
+              >
                 ×
               </button>
             </div>
-            <form onSubmit={handleEditProfile}>
+            <form onSubmit={handleEditProfile} className="modal-form">
               <div className="form-group">
-                <label>Name</label>
+                <label htmlFor="name">Full Name</label>
                 <input
                   type="text"
+                  id="name"
                   value={editForm.name}
-                  onChange={(e) => setEditForm((prev) => ({ ...prev, name: e.target.value }))}
+                  onChange={(e) => setEditForm(prev => ({ ...prev, name: e.target.value }))}
+                  placeholder="Enter your full name"
                   required
                 />
               </div>
-
               <div className="form-group">
-                <label>Email</label>
+                <label htmlFor="email">Email Address</label>
                 <input
                   type="email"
+                  id="email"
                   value={editForm.email}
-                  onChange={(e) => setEditForm((prev) => ({ ...prev, email: e.target.value }))}
+                  onChange={(e) => setEditForm(prev => ({ ...prev, email: e.target.value }))}
+                  placeholder="Enter your email address"
                   required
                 />
               </div>
-
               <div className="form-group">
-                <label>Profile Picture</label>
-                <input type="file" accept="image/*" onChange={handleImageChange} />
-                {preview && (
+                <label htmlFor="profilePicture">Profile Picture</label>
+                <div className="file-upload">
+                  <input
+                    type="file"
+                    id="profilePicture"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    className="file-input"
+                  />
+                  <label htmlFor="profilePicture" className="file-label">
+                    <i className="icon-upload"></i>
+                    Choose Image
+                  </label>
+                </div>
+                {(preview || profilePictureUrl) && (
                   <div className="image-preview">
-                    <img src={preview} alt="Preview" />
-                    <button
-                      type="button"
+                    <img src={preview || profilePictureUrl} alt="Preview" />
+                    <button 
+                      type="button" 
                       className="remove-image"
                       onClick={() => {
                         setPreview(null);
-                        setEditForm((prev) => ({ ...prev, profilePicture: null }));
+                        setEditForm(prev => ({ ...prev, profilePicture: null }));
                       }}
                     >
                       ×
                     </button>
                   </div>
                 )}
+                <div className="file-hint">Max file size: 5MB. Supported formats: JPG, PNG, GIF</div>
               </div>
-
               <div className="modal-actions">
-                <button type="button" onClick={() => setShowEditModal(false)}>
+                <button
+                  type="button"
+                  className="btn btn-outline"
+                  onClick={() => setShowEditModal(false)}
+                >
                   Cancel
                 </button>
-                <button type="submit" disabled={loading}>
-                  {loading ? 'Updating...' : 'Update Profile'}
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <>
+                      <div className="btn-spinner"></div>
+                      Updating...
+                    </>
+                  ) : (
+                    'Update Profile'
+                  )}
                 </button>
               </div>
             </form>
@@ -288,49 +418,71 @@ const Profile = () => {
           <div className="modal" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h3>Change Password</h3>
-              <button className="modal-close" onClick={() => setShowPasswordModal(false)}>
+              <button
+                className="modal-close"
+                onClick={() => setShowPasswordModal(false)}
+              >
                 ×
               </button>
             </div>
-            <form onSubmit={handleChangePassword}>
+            <form onSubmit={handleChangePassword} className="modal-form">
               <div className="form-group">
-                <label>Current Password</label>
+                <label htmlFor="currentPassword">Current Password</label>
                 <input
                   type="password"
+                  id="currentPassword"
                   value={passwordForm.currentPassword}
-                  onChange={(e) => setPasswordForm((prev) => ({ ...prev, currentPassword: e.target.value }))}
+                  onChange={(e) => setPasswordForm(prev => ({ ...prev, currentPassword: e.target.value }))}
+                  placeholder="Enter current password"
                   required
                 />
               </div>
-
               <div className="form-group">
-                <label>New Password</label>
+                <label htmlFor="newPassword">New Password</label>
                 <input
                   type="password"
+                  id="newPassword"
                   value={passwordForm.newPassword}
-                  onChange={(e) => setPasswordForm((prev) => ({ ...prev, newPassword: e.target.value }))}
+                  onChange={(e) => setPasswordForm(prev => ({ ...prev, newPassword: e.target.value }))}
+                  placeholder="Enter new password"
                   required
                   minLength="6"
                 />
+                <div className="password-hint">Must be at least 6 characters long</div>
               </div>
-
               <div className="form-group">
-                <label>Confirm Password</label>
+                <label htmlFor="confirmPassword">Confirm New Password</label>
                 <input
                   type="password"
+                  id="confirmPassword"
                   value={passwordForm.confirmPassword}
-                  onChange={(e) => setPasswordForm((prev) => ({ ...prev, confirmPassword: e.target.value }))}
+                  onChange={(e) => setPasswordForm(prev => ({ ...prev, confirmPassword: e.target.value }))}
+                  placeholder="Confirm new password"
                   required
                   minLength="6"
                 />
               </div>
-
               <div className="modal-actions">
-                <button type="button" onClick={() => setShowPasswordModal(false)}>
+                <button
+                  type="button"
+                  className="btn btn-outline"
+                  onClick={() => setShowPasswordModal(false)}
+                >
                   Cancel
                 </button>
-                <button type="submit" disabled={loading}>
-                  {loading ? 'Changing...' : 'Change Password'}
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <>
+                      <div className="btn-spinner"></div>
+                      Changing...
+                    </>
+                  ) : (
+                    'Change Password'
+                  )}
                 </button>
               </div>
             </form>

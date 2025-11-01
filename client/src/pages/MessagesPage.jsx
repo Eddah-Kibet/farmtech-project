@@ -82,7 +82,7 @@ const MessagesPage = () => {
                     </h4>
                     <p style={{ margin: 0, color: '#666', fontSize: '0.9rem' }}>
                       {conversation.last_message ? 
-                        conversation.last_message.content.substring(0, 50) + '...' : 
+                        conversation.last_message.content.substring(0, 50) : 
                         'No messages yet'
                       }
                     </p>

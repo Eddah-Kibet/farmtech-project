@@ -28,28 +28,49 @@ const Sidebar = ({ isOpen, onClose }) => {
 
   if (!isOpen) return null;
 
-  const profilePicture = currentUser?.profilePicture || currentUser?.profile_picture;
+  // Get profile picture with proper fallback
+  const getProfilePicture = () => {
+    const pic = currentUser?.profilePicture || currentUser?.profile_picture;
+    
+    // Check if it's a valid URL
+    if (pic && pic !== 'null' && pic !== 'undefined' && pic.trim() !== '') {
+      return pic;
+    }
+    
+    return null;
+  };
+
+  const profilePicture = getProfilePicture();
 
   return (
-    <div className="sidebar-overlay" onClick={onClose}>
-      <div className="sidebar" onClick={(e) => e.stopPropagation()}>
+    <div className={`sidebar-overlay ${isOpen ? 'open' : ''}`} onClick={onClose}>
+      <div className={`sidebar ${isDarkMode ? 'dark' : ''}`} onClick={(e) => e.stopPropagation()}>
         {/* User Profile Section */}
         <div className="sidebar-user-section">
           <div className="sidebar-profile-pic">
             {profilePicture ? (
               <img 
-                src={profilePicture.startsWith('http') ? profilePicture : `http://localhost:5000${profilePicture}`}
-                alt={currentUser.name}
-                className="sidebar-profile-pic"
+                src={profilePicture}
+                alt={currentUser?.name}
+                style={{ 
+                  width: '40px', 
+                  height: '40px', 
+                  borderRadius: '50%', 
+                  objectFit: 'cover',
+                  display: 'block'
+                }}
                 onError={(e) => {
-                  e.target.src = '/placeholder-avatar.png';
+                  e.target.style.display = 'none';
+                  e.target.nextSibling.style.display = 'flex';
                 }}
               />
-            ) : (
-              <div className="sidebar-profile-placeholder">
-                {currentUser?.name?.charAt(0).toUpperCase()}
-              </div>
-            )}
+            ) : null}
+            <div 
+              className="sidebar-profile-placeholder"
+              style={{ display: profilePicture ? 'none' : 'flex' }}
+            >
+              {currentUser?.name?.charAt(0).toUpperCase()}
+            </div>
           </div>
           <div className="sidebar-user-info">
             <div className="sidebar-user-name">{currentUser?.name}</div>
@@ -119,6 +140,15 @@ const Sidebar = ({ isOpen, onClose }) => {
               >
                 <ShoppingCart size={18} />
                 <span>My Orders</span>
+              </Link>
+
+              <Link 
+                to="/messages" 
+                className={`sidebar-link ${location.pathname === '/messages' ? 'active' : ''}`}
+                onClick={onClose}
+              >
+                <History size={18} />
+                <span>Messages</span>
               </Link>
 
               <Link 

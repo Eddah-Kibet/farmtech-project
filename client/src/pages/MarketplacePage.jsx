@@ -138,7 +138,6 @@ const MarketplacePage = () => {
             />
           </div>
           <div className="category-filter">
-            <label htmlFor="category-select" className="category-label">Category:</label>
             <select
               id="category-select"
               value={selectedCategory}

@@ -65,7 +65,6 @@ const AddProduct = () => {
       });
 
       if (response.status === 201) {
-        alert('Product added successfully!');
         setFormData({
           name: '',
           description: '',

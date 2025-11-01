@@ -80,7 +80,7 @@ def seed_database():
                 category="Other",
                 stock=15,
                 description="Raw, unfiltered honey from local bee colonies",
-                image="https://images.unsplash.com/photo-1587049352851-8d4e89133924?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1287",
+                image="https://images.unsplash.com/photo-1558642452-9d2a7deb7f62?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8aG9uZXl8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&q=60&w=900",
                 farmer_id=3
             ),
             # 4. Fresh Apples
@@ -90,7 +90,7 @@ def seed_database():
                 category="Fruits",
                 stock=100,
                 description="Crisp, juicy apples picked fresh from our orchard",
-                image="https://images.unsplash.com/photo-1610397962076-02407a169a5b?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1974",
+                image="https://plus.unsplash.com/premium_photo-1667049292983-d2524dd0ef08?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8YXBwbGVzfGVufDB8fDB8fHww&auto=format&fit=crop&q=60&w=900",
                 farmer_id=3
             ),
             # 5. Organic Carrots
@@ -110,7 +110,7 @@ def seed_database():
                 category="Fruits",
                 stock=30,
                 description="Sweet, seasonal strawberries perfect for desserts",
-                image="https://images.unsplash.com/photo-1565032156168-0a22e5b8374f?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1931",
+                image="https://plus.unsplash.com/premium_photo-1675731118661-15dc54c11130?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8c3RyYXdiZXJyaWVzfGVufDB8fDB8fHww&auto=format&fit=crop&q=60&w=900",
                 farmer_id=4
             ),
             # 7. Organic Potatoes
@@ -120,7 +120,7 @@ def seed_database():
                 category="Vegetables",
                 stock=60,
                 description="Hearty potatoes grown using sustainable farming methods",
-                image="https://images.unsplash.com/photo-1603048719539-9ecb4aa395e3?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=2084",
+                image="https://plus.unsplash.com/premium_photo-1664372599369-dd9f4ee07254?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8cG90YXRvZXN8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&q=60&w=900",
                 farmer_id=1
             ),
             # 8. Fresh Milk
@@ -179,7 +179,7 @@ def seed_database():
         db.session.commit()
 
         print("Seeding messages...")
-        
+
 
         print("Database seeded successfully!")
         print("\nSample Data Created:")

@@ -33,6 +33,22 @@ const FarmerProfile = () => {
     }
   };
 
+  // Get profile picture with proper fallback
+  const getProfilePictureUrl = (farmer) => {
+    const pic = farmer?.profile_picture || farmer?.profilePicture;
+    
+    if (!pic || pic === 'null' || pic === 'undefined' || pic.trim() === '') {
+      return null;
+    }
+    
+    return pic;
+  };
+
+  const generatePlaceholderSVG = (name) => {
+    const initial = name?.charAt(0).toUpperCase() || 'F';
+    return `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Crect fill='%234CAF50' width='100' height='100'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.35em' fill='white' font-size='40' font-weight='bold'%3E${initial}%3C/text%3E%3C/svg%3E`;
+  };
+
   if (loading) {
     return (
       <div className="farmer-profile">
@@ -50,21 +66,19 @@ const FarmerProfile = () => {
   }
 
   const { farmer, stats, products, ratings } = farmerData;
+  const profilePictureUrl = getProfilePictureUrl(farmer);
+  const placeholderSVG = generatePlaceholderSVG(farmer.name);
 
   return (
     <div className="farmer-profile">
       <div className="profile-header">
         <div className="farmer-info">
           <img
-            src={
-              farmer.profile_picture 
-                ? (farmer.profile_picture.startsWith('http') ? farmer.profile_picture : `http://localhost:5000${farmer.profile_picture}`)
-                : '/placeholder-avatar.png'
-            }
+            src={profilePictureUrl || placeholderSVG}
             alt={farmer.name}
             className="farmer-avatar"
             onError={(e) => {
-              e.target.src = '/placeholder-avatar.png';
+              e.target.src = placeholderSVG;
             }}
           />
           <div className="farmer-details">

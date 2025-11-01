@@ -7,7 +7,7 @@ import axios from 'axios';
 import './Cart.css';
 
 const Cart = ({ isOpen, onClose }) => {
-  const { cart, removeFromCart, updateQuantity, getTotalPrice, clearCart } = useCart();
+  const { cart, removeFromCart, updateQuantity, getTotalPrice, clearCart, removePaidProducts } = useCart();
   const { currentUser } = useAuth();
   const navigate = useNavigate();
   const [showPayment, setShowPayment] = useState(false);
@@ -36,6 +36,8 @@ const Cart = ({ isOpen, onClose }) => {
       });
 
       if (response.status === 201) {
+        const paidProductIds = cart.map(item => item.id);
+        removePaidProducts(paidProductIds);
         setShowPayment(false);
         onClose();
         navigate('/orders');

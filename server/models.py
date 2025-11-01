@@ -125,7 +125,6 @@ class Rating(db.Model, SerializerMixin):
 
     serialize_rules = ('-buyer.ratings_given', '-rated_farmer.ratings_received', '-product.ratings')
 
-    buyer_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False) 
     def to_dict(self):
         return {
             'id': self.id,
