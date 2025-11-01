@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify, send_from_directory
+from flask import make_response
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_cors import CORS
@@ -22,7 +23,11 @@ app.config['JWT_SECRET_KEY'] = os.getenv('SECRET_KEY', 'farm-marketplace-secret-
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=7)
 db.init_app(app)
 migrate = Migrate(app, db)
-CORS(app, origins=['http://localhost:5173', 'http://localhost:5174', 'https://phase-5-project-livid.vercel.app'], supports_credentials=True)
+CORS(app,
+    origins=['http://localhost:5173', 'http://localhost:5174', 'https://phase-5-project-livid.vercel.app'], 
+    allow_headers=['Content-Type', 'Authorization'],
+    methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    supports_credentials=True)
 jwt = JWTManager(app)
 
 # Ensure uploads directory exists
@@ -614,6 +619,17 @@ def get_farmer_profile(farmer_id):
 
     except Exception as e:
         return jsonify({'message': str(e)}), 500
+
+@app.before_request
+def handle_options():
+    if request.method == "OPTIONS":
+        response = make_response()
+        response.headers.add("Access-Control-Allow-Origin", request.headers.get("Origin", "*"))
+        response.headers.add("Access-Control-Allow-Headers", "Content-Type, Authorization")
+        response.headers.add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+        response.headers.add("Access-Control-Allow-Credentials", "true")
+        return response
+
 
 if __name__ == '__main__':
     # Ensure instance directory exists
