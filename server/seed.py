@@ -7,16 +7,11 @@ from datetime import datetime
 
 def seed_database():
     with app.app_context():
-        # -------------------------------------------------
-        # 1. Reset DB
-        # -------------------------------------------------
+
         print("Clearing existing data...")
         db.drop_all()
         db.create_all()
 
-        # -------------------------------------------------
-        # 2. Users (real profile pictures)
-        # -------------------------------------------------
         print("Creating users...")
         users = [
             User(
@@ -56,9 +51,6 @@ def seed_database():
             db.session.add(u)
         db.session.commit()
 
-        # -------------------------------------------------
-        # 3. Products – **real matching images**
-        # -------------------------------------------------
         print("Creating products...")
         products = [
             # 1. Tomatoes
@@ -78,7 +70,7 @@ def seed_database():
                 category="Dairy",
                 stock=24,
                 description="Farm-fresh eggs from free-range chickens raised naturally",
-                image="https://images.pexels.com/photos/1622913/pexels-photo-1622913.jpeg?auto=compress&cs=tinysrgb&w=600",
+                image="https://images.unsplash.com/photo-1506976785307-8732e854ad03?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1943",
                 farmer_id=1
             ),
             # 3. Pure Honey
@@ -88,7 +80,7 @@ def seed_database():
                 category="Other",
                 stock=15,
                 description="Raw, unfiltered honey from local bee colonies",
-                image="https://images.pexels.com/photos/4041392/pexels-photo-4041392.jpeg?auto=compress&cs=tinysrgb&w=600",
+                image="https://images.unsplash.com/photo-1587049352851-8d4e89133924?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1287",
                 farmer_id=3
             ),
             # 4. Fresh Apples
@@ -98,7 +90,7 @@ def seed_database():
                 category="Fruits",
                 stock=100,
                 description="Crisp, juicy apples picked fresh from our orchard",
-                image="https://images.pexels.com/photos/102104/pexels-photo-102104.jpeg?auto=compress&cs=tinysrgb&w=600",
+                image="https://images.unsplash.com/photo-1610397962076-02407a169a5b?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1974",
                 farmer_id=3
             ),
             # 5. Organic Carrots
@@ -108,7 +100,7 @@ def seed_database():
                 category="Vegetables",
                 stock=75,
                 description="Sweet, crunchy carrots grown in rich organic soil",
-                image="https://images.pexels.com/photos/365050/pexels-photo-365050.jpeg?auto=compress&cs=tinysrgb&w=600",
+                image="https://images.unsplash.com/photo-1590868309235-ea34bed7bd7f?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=927",
                 farmer_id=4
             ),
             # 6. Fresh Strawberries
@@ -118,7 +110,7 @@ def seed_database():
                 category="Fruits",
                 stock=30,
                 description="Sweet, seasonal strawberries perfect for desserts",
-                image="https://images.pexels.com/photos/46174/strawberries-fruits-strawberry-red-46174.jpeg?auto=compress&cs=tinysrgb&w=600",
+                image="https://images.unsplash.com/photo-1565032156168-0a22e5b8374f?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1931",
                 farmer_id=4
             ),
             # 7. Organic Potatoes
@@ -128,7 +120,7 @@ def seed_database():
                 category="Vegetables",
                 stock=60,
                 description="Hearty potatoes grown using sustainable farming methods",
-                image="https://images.pexels.com/photos/144248/potatoes-vegetables-erdfrucht-bio-144248.jpeg?auto=compress&cs=tinysrgb&w=600",
+                image="https://images.unsplash.com/photo-1603048719539-9ecb4aa395e3?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=2084",
                 farmer_id=1
             ),
             # 8. Fresh Milk
@@ -138,7 +130,7 @@ def seed_database():
                 category="Dairy",
                 stock=20,
                 description="Fresh milk from grass-fed cows, pasteurized daily",
-                image="https://images.pexels.com/photos/248412/pexels-photo-248412.jpeg?auto=compress&cs=tinysrgb&w=600",
+                image="https://images.unsplash.com/photo-1523473827533-2a64d0d36748?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1760",
                 farmer_id=3
             )
         ]
@@ -147,9 +139,6 @@ def seed_database():
             db.session.add(p)
         db.session.commit()
 
-        # -------------------------------------------------
-        # 4. Orders + order-product links
-        # -------------------------------------------------
         print("Creating orders...")
         orders = [
             Order(buyer_id=2, total_amount=600.00, status="delivered"),
@@ -158,13 +147,13 @@ def seed_database():
         ]
         for o in orders:
             db.session.add(o)
-        db.session.flush()   # gives us the auto-generated order IDs
+        db.session.flush()   
 
         order_products_data = [
-            (1, 1, 2),   # Order 1: 2 × Tomatoes
-            (1, 2, 1),   # Order 1: 1 × Eggs
-            (2, 3, 1),   # Order 2: 1 × Honey
-            (3, 6, 1),   # Order 3: 1 × Strawberries
+            (1, 1, 2),   
+            (1, 2, 1),   
+            (2, 3, 1),   
+            (3, 6, 1),   
         ]
 
         for order_id, product_id, qty in order_products_data:
@@ -175,9 +164,6 @@ def seed_database():
             )
             db.session.execute(stmt)
 
-        # -------------------------------------------------
-        # 5. Ratings
-        # -------------------------------------------------
         print("Creating ratings...")
         ratings = [
             Rating(buyer_id=2, farmer_id=1, product_id=1, score=9,
@@ -192,9 +178,9 @@ def seed_database():
 
         db.session.commit()
 
-        # -------------------------------------------------
-        # 6. Summary
-        # -------------------------------------------------
+        print("Seeding messages...")
+        
+
         print("Database seeded successfully!")
         print("\nSample Data Created:")
         print(f"   Users: {len(users)} (3 farmers, 1 buyer)")

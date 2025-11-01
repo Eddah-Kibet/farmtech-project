@@ -14,48 +14,26 @@ export const ThemeProvider = ({ children }) => {
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
-    try {
-      const savedTheme = localStorage.getItem('theme');
-      if (savedTheme === 'dark') {
-        setIsDarkMode(true);
-        if (document.body) {
-          document.body.classList.add('dark-mode');
-        }
-      } else if (savedTheme === 'light') {
-        setIsDarkMode(false);
-        if (document.body) {
-          document.body.classList.remove('dark-mode');
-        }
-      } else {
-        const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        if (systemPrefersDark) {
-          setIsDarkMode(true);
-          if (document.body) {
-            document.body.classList.add('dark-mode');
-          }
-        }
-      }
-    } catch (error) {
-      console.error('Error initializing theme:', error);
+    // Check for saved theme preference or default to light mode
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+      setIsDarkMode(true);
+      document.body.classList.add('dark-mode');
+    } else {
+      setIsDarkMode(false);
+      document.body.classList.remove('dark-mode');
     }
   }, []);
 
   const toggleTheme = () => {
     const newTheme = !isDarkMode;
     setIsDarkMode(newTheme);
-    
-    try {
-      localStorage.setItem('theme', newTheme ? 'dark' : 'light');
-    } catch (error) {
-      console.error('Error saving theme to localStorage:', error);
-    }
+    localStorage.setItem('theme', newTheme ? 'dark' : 'light');
 
-    if (document.body) {
-      if (newTheme) {
-        document.body.classList.add('dark-mode');
-      } else {
-        document.body.classList.remove('dark-mode');
-      }
+    if (newTheme) {
+      document.body.classList.add('dark-mode');
+    } else {
+      document.body.classList.remove('dark-mode');
     }
   };
 
