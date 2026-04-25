@@ -64,4 +64,3 @@ Payment system integration
 
 Contributions are welcome! Feel free to fork the repository and submit a pull request.
 
-📄 License
